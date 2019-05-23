@@ -3,8 +3,8 @@ package main
 //Temporrally main program like in Haskell until
 func main() {
 	// primitiveTypes()
-	// typeStruct()
-	 constTypes()
+	typeStruct()
+	 //constTypes()
 	//forLoops()
 
 }
