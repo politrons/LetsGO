@@ -5,7 +5,7 @@ import (
 )
 
 // Pretty much the same like in other languajes, quite extend and simple to use like in Scala
-func forLoops() {
+func forLoops() bool{
 
 	foo := 0
 	for i := 0; i < 10; i++ {
@@ -22,5 +22,5 @@ func forLoops() {
 		foo = +1
 	}
 	fmt.Println(foo)
-
+	return true
 }
