@@ -18,8 +18,8 @@ func forLoops() {
 	}
 	fmt.Println(foo)
 
-	for foo < 100{
-		foo=+1
+	for foo < 100 {
+		foo = +1
 	}
 	fmt.Println(foo)
 

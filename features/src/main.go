@@ -4,7 +4,6 @@ package main
 func main() {
 	// primitiveTypes()
 	//typeStruct()
-	 //constTypes()
+	//constTypes()
 	forLoops()
-
 }
