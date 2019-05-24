@@ -13,4 +13,5 @@ func TestFunctions(t *testing.T) {
 	if (result) < 198100 {
 		t.Errorf("Error invoking function")
 	}
+	consumeMultiType()
 }
