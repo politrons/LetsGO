@@ -5,13 +5,51 @@ import (
 	"testing"
 )
 
-func TestMapMake(t *testing.T) {
-	mapMake()
-}
 
 type MyFoo struct {
 	valueA string
 	valueB int
+}
+
+
+func TestArraysAndSlices(t *testing.T) {
+	arraysAndSlices()
+}
+
+//In Go a list are arrays without fixed size, just like in other languages you can have a fixed array, puting the pax size [x] 
+//when you create
+//Using [append] operator we can add/delete elements into the array, and return a copy of a new one, allowing us do
+//FP using collection and not mutate previous collection.
+//In order to  delete the slice in a FP way, we need to create a function [deleteSliceElementFunc] that recicve
+// the slice array and the element to be deleted, and return new collection without that element.
+func arraysAndSlices(){
+	fixedArray := [3]string{"Hello", "GoLang","World"}
+	fmt.Println(fixedArray)
+
+	myArray := make([]int, 5)
+	fmt.Println(myArray)
+
+	slice :=[]int{1,2,3,4,5}
+	newSlice := append(slice, 6,7,8,9,10)
+	fmt.Println(slice)
+	fmt.Println(newSlice)
+
+	deleteSliceElementFunc := func(_value int, slice [] int)[]int{
+		newSlice := []int{}
+		for _, value := range slice {
+			if(value != _value){
+				newSlice = append(newSlice, value)
+			}
+		}
+		return newSlice
+	}
+	newSliceDeleted := deleteSliceElementFunc(3,slice)
+	fmt.Println(newSliceDeleted)
+	//slice.add(6)
+}
+
+func TestMapMake(t *testing.T) {
+	mapMake()
 }
 
 //In GO the map collector it's created using map[keyType]valueType format.

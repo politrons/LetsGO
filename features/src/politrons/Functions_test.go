@@ -8,6 +8,11 @@ import (
 	"testing"
 )
 
+type Foo struct {
+	intValue int
+	strValue string
+}
+
 //Unit test for function
 //In Golang in order to make the test framework of Go detect the test class, the class it must end with _test
 func TestFunctions(t *testing.T) {
@@ -17,11 +22,6 @@ func TestFunctions(t *testing.T) {
 		t.Errorf("Error invoking function")
 	}
 	consumeMultiType()
-}
-
-type Foo struct {
-	intValue int
-	strValue string
 }
 
 //In Go you can define variable just using [var] or in the [:=] assign a colon before the equals.
@@ -36,6 +36,9 @@ func myFirstFunction(value string, intValue int) int {
 	return intValue * 100
 }
 
+func TestMultiTypeReturnFunctions(t *testing.T) {
+	consumeMultiType()
+}
 //Go function allow just like in Scala multi type.
 //The number of types expected from the invoker function must be the same.
 func consumeMultiType() {
@@ -47,20 +50,6 @@ func consumeMultiType() {
 //In go it's also possible return multiple types in one function
 func returnMultiType() (string, string, int, Foo) {
 	return "hello", "Go", 1981, Foo{1, "politrons"}
-}
-
-func TestLambdFunctions(t *testing.T) {
-	lambdaFunctions()
-}
-
-//Go even as not FP language allow High order functions, in here, Slice accept an
-// interface{} as first argument, and then a function to order the array.
-func lambdaFunctions() {
-	var people = []string{"Politrons", "Jaime", "John"}
-	sort.Slice(people, func(i, j int) bool {
-		return len(people[i]) < len(people[j])
-	})
-	fmt.Println(people)
 }
 
 func TestHighOrderFunctions(t *testing.T) {
@@ -93,4 +82,18 @@ func concatNameAndAgeFunc() func(string, int) string {
 	return func(name string, age int) string {
 		return (strings.ToUpper(name) + "-" + strconv.Itoa(age))
 	}
+}
+
+func TestLambdFunctions(t *testing.T) {
+	lambdaFunctions()
+}
+
+//Go even as not FP language allow High order functions, in here, Slice accept an
+// interface{} as first argument, and then a function to order the array.
+func lambdaFunctions() {
+	var people = []string{"Politrons", "Jaime", "John"}
+	sort.Slice(people, func(i, j int) bool {
+		return len(people[i]) < len(people[j])
+	})
+	fmt.Println(people)
 }
