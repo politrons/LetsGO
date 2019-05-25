@@ -11,6 +11,7 @@
 * **[Conditions](features/src/politrons/Conditions_test.go)**
 * **[Functions](features/src/politrons/Functions_test.go)** 
 * **[Methods](features/src/politrons/Methods_test.go)**
+* **[Interfaces](features/src/politrons/Interfaces_test.go)**
 
 ### Programs
 ![My image](img/programs.jpg)    
