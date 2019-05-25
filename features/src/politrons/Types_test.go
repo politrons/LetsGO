@@ -5,6 +5,15 @@ import (
 	"testing"
 )
 
+/*
+In Go all primitive types can being wrapped in types, preventing to use just the primitive type in your functions
+making the code more readable and type-safe.
+To create a type of a primitive, you just need wrap the value in the type Name("politrons")
+*/
+type Name string
+type Age int
+type Sex string
+
 //In Go in order to being detected as Unit test by the test framework you need to start the 
 //Test case with [Test] also the file it must end with [_test.go]
 func TestTypes(t *testing.T){
@@ -15,18 +24,18 @@ func TestTypes(t *testing.T){
 
 //Animal type that define two primitive types
 type Animal struct {
-	age int
-	sex string
+	age Age
+	sex Sex
 }
 
 //Human type that define one primitive type and the Animal type
 type Human struct {
-	name   string
+	name   Name
 	animal Animal
 }
 
 type Dog struct {
-	name   string
+	name   Name
 	tail   int
 	animal Animal
 }
@@ -56,15 +65,16 @@ func constTypes() bool {
 // Also to define the types it use a pretty similar syntax as Haskell, we just need to use {} to define it
 // using the name of the attributes or witout it, and respeting the order of the arguments.
 func typeStruct() bool {
+	
 	man := Human{
-		name:   "Politrons",
-		animal: Animal{age: 10, sex: "male"},
+		name:   Name("Politrons"),
+		animal: Animal{age: Age(10), sex: Sex("male")},
 	}
 	women := Human{"Esther", Animal{35, "female"}}
 	fmt.Println(man)
 	fmt.Println(women)
 
-	var dog = Dog{name: "Bingo", tail: 10, animal: Animal{8, "male"}}
+	var dog = Dog{name: Name("Bingo"), tail: 10, animal: Animal{8, "male"}}
 	fmt.Println(dog)
 	
 
