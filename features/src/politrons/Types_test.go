@@ -38,7 +38,7 @@ func primitiveTypes() bool {
 	var i int = 1
 	var f float64 = 1.1
 	var b bool = false
-	var s = "Hello Go"
+ 	s := "Hello Go"
 	var stringVal, intVal, boolVal = "String value", 1, true
 	println(i, f, b, s, stringVal, intVal, boolVal)
 	return true

@@ -6,10 +6,11 @@
 ### Features
 ![My image](img/features.jpg)    
 
+* **[Types](features/src/politrons/Types_test.go)**
 * **[Collections](features/src/politrons/Collections_test.go)**
 * **[Conditions](features/src/politrons/Conditions_test.go)**
 * **[Functions](features/src/politrons/Functions_test.go)** 
-* **[Types](features/src/politrons/Types_test.go)**
+* **[Methods](features/src/politrons/Methods_test.go)**
 
 ### Programs
 ![My image](img/programs.jpg)    

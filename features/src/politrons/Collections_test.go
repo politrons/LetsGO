@@ -5,13 +5,10 @@ import (
 	"testing"
 )
 
-
 type MyFoo struct {
 	valueA string
 	valueB int
 }
-
-
 func TestArraysAndSlices(t *testing.T) {
 	arraysAndSlices()
 }
@@ -47,7 +44,6 @@ func arraysAndSlices(){
 	fmt.Println(newSliceDeleted)
 	//slice.add(6)
 }
-
 func TestMapMake(t *testing.T) {
 	mapMake()
 }
@@ -59,7 +55,6 @@ func mapMake() {
 	myMap["MyKey"] = MyFoo{"hello", 1981}
 	fmt.Println(myMap["MyKey"])
 }
-
 func TestMapLitertal(t *testing.T) {
 	mapLitertal()
 }
@@ -75,7 +70,6 @@ func mapLitertal() {
 		fmt.Println("Key:", key, " Value:", value)
 	}
 }
-
 func TestMapFeatures(t *testing.T) {
 	mapFeatures()
 }

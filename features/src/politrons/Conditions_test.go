@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"testing"
 )
-
 // Unit test for the for loop functionality
 func TestForLoop(t *testing.T) {
 	forLoops()
@@ -28,7 +27,6 @@ func forLoops(){
 	}
 	fmt.Println(foo)
 }
-
 func TestForRange(t *testing.T) {
 	forRange()
 }
@@ -41,7 +39,6 @@ func forRange(){
 		println("Index" ,index) 
 		println("Value" ,value)
 	}
-	
 	myMap := map[int]string{1:"value1",2:"value2",3:"value3"}
 	for key, value := range myMap{
 		println("Key", key, "Value", value)
