@@ -1,6 +1,6 @@
  # Let's GO  
-![My image](img/gopher-main.png)    
  Examples of the most important features
+![My image](img/gopher-main.png)    
   of this languages.
 
 ### Features
