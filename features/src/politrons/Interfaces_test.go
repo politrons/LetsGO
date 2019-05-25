@@ -41,6 +41,11 @@ func TestInterfaces(t *testing.T){
 
 /*
 In Go the [Any] type of Scala it's called [interface{}] which means it can be any possible type.
+Also you can add another interface type as [MyName] which implement [MyFirstInterface] and 
+invoke the method of this one. 
+
+In order to get the type of a interface, you need to get the type using [Type assertions] interface.(Type)
+that return the type and also a boolean with true/false if the type was there.
 */
 func TestInterfaceGeneric(t *testing.T){
 	var anyVal interface{}
@@ -48,6 +53,16 @@ func TestInterfaceGeneric(t *testing.T){
 	fmt.Printf("(%v, %T)\n", anyVal, anyVal)
 	anyVal = 1981
 	fmt.Printf("(%v, %T)\n", anyVal, anyVal)
+
+	anyVal = MyName("It's cool use interfaces")
+    myName,ok := anyVal.(MyName)
+	myName.contractToImplement()
+	fmt.Printf("(%v, %T)\n", anyVal, anyVal)
+	fmt.Printf("(%v, %T)\n", myName, myName)
+	fmt.Println(myName, ok)
+	//type strting in nos in anyVal
+	foo,ok := anyVal.(string)
+	fmt.Println(foo, ok)
 }
 
 // This method means type MyCustomType implements the interface MyFirstInterface,
