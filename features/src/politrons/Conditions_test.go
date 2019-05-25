@@ -5,12 +5,8 @@ import (
 	"testing"
 )
 // Unit test for the for loop functionality
-func TestForLoop(t *testing.T) {
-	forLoops()
-}
-
 // Pretty much the same like in other languajes, quite extend and simple to use like in Scala
-func forLoops(){
+func TestForLoop(t *testing.T) {
 	foo := 0
 	for i := 0; i < 10; i++ {
 		foo += i
@@ -27,13 +23,10 @@ func forLoops(){
 	}
 	fmt.Println(foo)
 }
-func TestForRange(t *testing.T) {
-	forRange()
-}
 
 //Using [range] operator we can extract and interate elements from an array and get index and value.
 //You can also do it to iterte over a map and extract pair of key/value per entry.
-func forRange(){
+func TestForRange(t *testing.T) {
 	var array = []int{1,4,30,10,5,68}
     for index,value := range array {
 		println("Index" ,index) 
@@ -44,3 +37,5 @@ func forRange(){
 		println("Key", key, "Value", value)
 	}
 }
+
+

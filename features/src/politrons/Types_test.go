@@ -65,7 +65,6 @@ func constTypes() bool {
 // Also to define the types it use a pretty similar syntax as Haskell, we just need to use {} to define it
 // using the name of the attributes or witout it, and respeting the order of the arguments.
 func typeStruct() bool {
-	
 	man := Human{
 		name:   Name("Politrons"),
 		animal: Animal{age: Age(10), sex: Sex("male")},
