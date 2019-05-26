@@ -2,8 +2,11 @@
 
 ![My image](img/gopher-main.png)    
  # Let's GO  
- Examples of the most important features of this languages.
+Examples of the most important features of this languages.
 
+In order to follow example, it's better read from top to bottom of the page.
+
+Is this repo useful? Please ⭑Star this repository and share the love.
 
 ### Features
 ![My image](img/features.jpg)    
