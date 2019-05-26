@@ -18,6 +18,7 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 * **[Methods](features/src/politrons/Methods_test.go)**
 * **[Interfaces](features/src/politrons/Interfaces_test.go)**
 * **[Error Handling](features/src/politrons/ErrorHandling_test.go)**
+* **[Concurrency](features/src/politrons/Concurrency_test.go)**
 
 ### Programs
 ![My image](img/programs.jpg)    
