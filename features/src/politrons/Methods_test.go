@@ -36,6 +36,7 @@ func (foo MethodFoo) upperCaseMethod() MethodFoo{
 	return MethodFoo{ age: 38, name:  strings.ToUpper(foo.name) + "!!" }
 }
 
+//Function that extend the functionality of the type List and allow delete elements in the list by index.
 func (myList MyList) deleteByIndex(i int) MyList{
 	newList := []string{}
 	for index,value := range myList {
@@ -46,10 +47,9 @@ func (myList MyList) deleteByIndex(i int) MyList{
 	return newList
 }
 
+//Function that iterate the internal type that extend and put every element in upperCase.
 func (myList MyList) toUpprCase() MyList{
 	newList := []string{}
-	for _,value := range myList {
-			newList = append(newList, strings.ToUpper(value))
-	}
+	for _,value := range myList { newList = append(newList, strings.ToUpper(value)) }
 	return newList
 }
