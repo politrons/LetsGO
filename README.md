@@ -1,6 +1,8 @@
+ Author Pablo Pérez García
+![My image](img/gopher-main.png)    
  # Let's GO  
  Examples of the most important features of this languages.
-![My image](img/gopher-main.png)    
+
 
 ### Features
 ![My image](img/features.jpg)    
