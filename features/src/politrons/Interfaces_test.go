@@ -129,3 +129,29 @@ func (list ListString) Filter(fn func(str string) bool) ListString {
 }
 
 type ListString []string
+
+/*
+Using the type of the generic interface we can know the type of the element in the interface
+and using it in a switch statement, where we can cast in a specific type and use it.
+*/
+func TestInterfaceWithSwichTypes(t *testing.T) {
+	do(21)
+	do("hello")
+	do(ListString{"hello", "golang", "world"})
+	do(true)
+}
+
+func do(i interface{}) {
+	switch v := i.(type) {
+	case int:
+		fmt.Printf("Twice %v is %v\n", v, v*2)
+	case string:
+		var strValue = i.(string) //Now we can get the value in the specific type.
+		println("Value of String", strValue)
+		fmt.Printf("%q is %v bytes long\n", v, len(v))
+	case ListString:
+		fmt.Printf("%q is %v bytes List of string\n", v, len(v))
+	default:
+		fmt.Printf("I don't know about type %T!\n", v)
+	}
+}
