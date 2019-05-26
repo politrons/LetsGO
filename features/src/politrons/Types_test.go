@@ -6,16 +6,16 @@ import (
 )
 
 /*
-In Go all primitive types can being wrapped in types, preventing to use just the primitive type in your functions
+In Go all primitive types can be wrapped in types, preventing to use just the primitive type in your functions
 making the code more readable and type-safe.
-To create a type of a primitive, you just need wrap the value in the type Name("politrons")
+To create a type of a primitive, you just need to wrap the value in the type Name("politrons")
 */
 type Name string
 type Age int
 type Sex string
 
-//In Go in order to being detected as Unit test by the test framework you need to start the 
-//Test case with [Test] also the file it must end with [_test.go]
+//In Go in order to be detected as Unit test by the test framework you need to start the 
+//Test case with [Test] also the file name must end with [_test.go]
 func TestTypes(t *testing.T){
 	primitiveTypes()
 	constTypes()
@@ -52,8 +52,8 @@ func primitiveTypes() {
 	println(i, f, b, s, stringVal, intVal, boolVal)
 }
 
-//Const types in Go is like create immutable types in Scala with [val] the compiler
-// it wont allow reasign a variable already asigned initiallyl
+//Const types in Go are like creation of immutable types in Scala with [val] the compiler
+// it won’t allow reassignment of a variable already asigned initially
 func constTypes() {
 	const stringVal, intVal, boolVal = "String value", 1, true
 	println(stringVal, intVal, boolVal)
@@ -61,7 +61,7 @@ func constTypes() {
 
 // In Go we can create types adding the key [struct] at the end of the name of the type
 // Also to define the types it use a pretty similar syntax as Haskell, we just need to use {} to define it
-// using the name of the attributes or witout it, and respeting the order of the arguments.
+// using the name of the attributes or without it, and respecting the order of the arguments.
 func typeStruct() {
 	man := Human{
 		name:   Name("Politrons"),
