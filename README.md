@@ -1,5 +1,5 @@
  Author Pablo Pérez García
- 
+
 ![My image](img/gopher-main.png)    
  # Let's GO  
  Examples of the most important features of this languages.
@@ -14,6 +14,7 @@
 * **[Functions](features/src/politrons/Functions_test.go)** 
 * **[Methods](features/src/politrons/Methods_test.go)**
 * **[Interfaces](features/src/politrons/Interfaces_test.go)**
+* **[Error Handling](features/src/politrons/ErrorHandling_test.go)**
 
 ### Programs
 ![My image](img/programs.jpg)    
