@@ -26,13 +26,17 @@ type MyCustomError struct {
 }
 
 /*
-In order to define a type of interface [error] we need to make the type implement method interface
-[error], then it will automatically candidate to be used by error system of GO.
+In order to define a type of interface [error] we need to make the [type] implement method interface
+[Error()], then it will automatically candidate to be used by error system of GO.
 */
 func (e MyCustomError) Error() string {
 	return fmt.Sprintf("at %v, %s",e.Time, e.Cause)
 }
 
+/*
+This function it has a similar type return a tuple(value, error) which it would be a very rudimentary 
+[Either[T,R]] here we return as error the [error] type used by GO.
+*/
 func runLogic() (string,error) {
 	if(randFunc()){
 		return "",MyCustomError{time.Now(),"Error found in logic",}
