@@ -38,4 +38,19 @@ func TestForRange(t *testing.T) {
 	}
 }
 
+/* 
+[Defer] is an operator to make wait the execute of a function until the end of the current function where
+remains ends. Once the function ends start executing the defer functions just like recursively from the bottom to 
+the top of the function.
+*/
+func TestForDefer(t *testing.T) {
+	fmt.Println("Start")
 
+	defer println("Iteration done")
+	for i := 0; i < 3; i++ {
+		defer fmt.Println(i)
+	}
+	defer println("Iteration start")
+
+	fmt.Println("End")
+}
