@@ -6,7 +6,7 @@ import (
 )
 // Unit test for the for loop functionality
 // Pretty much the same like in other languajes, quite extend and simple to use like in Scala
-func TestForLoop(t *testing.T) {
+func ForLoop() {
 	foo := 0
 	for i := 0; i < 10; i++ {
 		foo += i
