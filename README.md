@@ -1,7 +1,6 @@
  # Let's GO  
- Examples of the most important features
+ Examples of the most important features of this languages.
 ![My image](img/gopher-main.png)    
-  of this languages.
 
 ### Features
 ![My image](img/features.jpg)    
