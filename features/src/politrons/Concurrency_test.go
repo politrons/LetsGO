@@ -4,8 +4,11 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"sync"
 	"testing"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 /*
@@ -68,7 +71,7 @@ func runAsyncWithChannel(channel chan string, s string) {
 }
 
 /*
-We can have Goroutine composition like [flatMap] with Scala futures creating two channels once, for the first Goroutine, 
+We can have Goroutine composition like [flatMap] with Scala futures creating two channels once, for the first Goroutine,
 and another to the second one, and the second routine receive not only his own channel but the previous routine function
 to start working, once receive the end of the previous one.
 Doing this, we manage to work sequentially doing composition.
@@ -77,9 +80,13 @@ func TestGoroutineComposition(t *testing.T) {
 	channel1 := make(chan User)
 	channel2 := make(chan User)
 	go someAsyncLogic(channel1, User{"customUserId", ""})
-	go composeFromPreviousChannel(channel1,channel2)
-	result :=<-channel2
-	fmt.Println(result)
+	go composeFromPreviousChannel(channel1, channel2)
+	result, isChannelOpen := <-channel2
+	if isChannelOpen {
+		fmt.Println(result)
+	} else {
+		fmt.Println("Error reading from channel", isChannelOpen)
+	}
 }
 
 func someAsyncLogic(channel chan User, user User) {
@@ -87,7 +94,7 @@ func someAsyncLogic(channel chan User, user User) {
 	channel <- newUser
 }
 
-func composeFromPreviousChannel(channelCompose chan User,channel chan User) {
+func composeFromPreviousChannel(channelCompose chan User, channel chan User) {
 	user := <-channelCompose
 	newUser := User{userID: strings.ToUpper(user.userID), name: strings.ToUpper(user.name)}
 	channel <- newUser
@@ -96,4 +103,69 @@ func composeFromPreviousChannel(channelCompose chan User,channel chan User) {
 type User struct {
 	userID string
 	name   string
+}
+
+/*
+Using for { select { } } structure we can have some sort of switch where we can wait for all the channels in parallel
+and assing an action once the process has finish. The order is not establish and it will block until all the process
+are done.
+*/
+func TestChannelSelect(t *testing.T) {
+	channel1 := make(chan string)
+	channel2 := make(chan string)
+	channel3 := make(chan string)
+	go asyncRandomString(channel1)
+	go asyncRandomString(channel2)
+	go asyncRandomString(channel3)
+	for {
+		select {
+		case value1 := <-channel1:
+			println("A", value1)
+		case value2 := <-channel2:
+			println("B", value2)
+		case value3 := <-channel3:
+			println("C", value3)
+		}
+	}
+}
+
+func asyncRandomString(channel chan string) {
+	randomVal, _ := uuid.NewUUID()
+	channel <- randomVal.String()
+}
+
+/*
+Go is not Functional language by design, which means it's provide some mechanism to fight against concurrent access to mutable resources.
+Here we create a type that wrap a resource map, that we want to synchronize the access. In order to do that you just need to add
+a [sync.Mutex] inside your structure, and implement the extended method where you want to mutate that resource.
+In that method since it's an extension of your resource, you can use the [sync.Mutex] to [Lock()] and  [Unlock()] access.
+*/
+func TestSynchronizeResource(t *testing.T) {
+	channel1 := make(chan map[string]int)
+	channel2 := make(chan map[string]int)
+	channel3 := make(chan map[string]int)
+	mySafeMap := SafeMap{myMap: map[string]int{"key1": 1, "key2": 2, "key3": 3}}
+	go actionOverMap(channel1, "key1", mySafeMap)
+	go actionOverMap(channel2, "key2", mySafeMap)
+	go actionOverMap(channel3, "key2", mySafeMap)
+	response, response1, response2 := <-channel1, <-channel2, <- channel3
+	fmt.Println("Map1:", response, "Map2:", response1, "Map3:", response2)
+}
+
+//We need to create a sync.Mutex in our type to provide a mechanism to lock the access into.
+type SafeMap struct {
+	myMap map[string]int
+	mux   sync.Mutex
+}
+
+func actionOverMap(channel chan map[string]int, key string, mySafeMap SafeMap) {
+	myMap := mySafeMap.deleteElementByID(key)
+	channel <- myMap
+}
+
+func (mySafeMap SafeMap) deleteElementByID(id string) map[string]int {
+	mySafeMap.mux.Lock()
+	defer mySafeMap.mux.Unlock()
+	delete(mySafeMap.myMap, id)
+	return mySafeMap.myMap
 }
