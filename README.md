@@ -20,7 +20,7 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 * **[Error Handling](features/src/politrons/lang/ErrorHandling_test.go)**
 * **[Concurrency](features/src/politrons/lang/Concurrency_test.go)**
 
-### Category theory
+### Monads
 ![My image](img/pure.png)    
 * **[Maybe](features/src/politrons/categoryTheory/Maybe_test.go)**
 
