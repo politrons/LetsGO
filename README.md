@@ -22,7 +22,7 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 
 ### Monads
 ![My image](img/pure.png)    
-* **[Maybe](features/src/politrons/categoryTheory/Maybe_test.go)**
+* **[Maybe](features/src/politrons/monads/Maybe_test.go)**
 
 ### Programs
 ![My image](img/programs.jpg)    
