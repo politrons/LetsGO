@@ -148,7 +148,7 @@ func TestSynchronizeResource(t *testing.T) {
 	go actionOverMap(channel1, "key1", mySafeMap)
 	go actionOverMap(channel2, "key2", mySafeMap)
 	go actionOverMap(channel3, "key2", mySafeMap)
-	response, response1, response2 := <-channel1, <-channel2, <- channel3
+	response, response1, response2 := <-channel1, <-channel2, <-channel3
 	fmt.Println("Map1:", response, "Map2:", response1, "Map3:", response2)
 }
 
@@ -168,4 +168,35 @@ func (mySafeMap SafeMap) deleteElementByID(id string) map[string]int {
 	defer mySafeMap.mux.Unlock()
 	delete(mySafeMap.myMap, id)
 	return mySafeMap.myMap
+}
+
+func TestForChannelComposition(t *testing.T) {
+	chan1 := pureChannel("hello golang world")
+	chan2 := appendChannel(chan1, "!!!!")
+	value2 := <-upperChannel(chan2)
+	println(value2)
+}
+
+func pureChannel(value string) chan string {
+	channel := make(chan string)
+	go func() {
+		channel <- value
+	}()
+	return channel
+}
+
+func appendChannel(prevChannel chan string, anoherValue string) chan string {
+	channel := make(chan string)
+	go func() {
+		channel <- (<-prevChannel) + anoherValue
+	}()
+	return channel
+}
+
+func upperChannel(prevChannel chan string) chan string {
+	channel := make(chan string)
+	go func() {
+		channel <- strings.ToUpper(<-prevChannel)
+	}()
+	return channel
 }
