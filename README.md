@@ -11,14 +11,18 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 ### Features
 ![My image](img/features.jpg)    
 
-* **[Types](features/src/politrons/Types_test.go)**
-* **[Collections](features/src/politrons/Collections_test.go)**
-* **[Conditions](features/src/politrons/Conditions_test.go)**
-* **[Functions](features/src/politrons/Functions_test.go)** 
-* **[Methods](features/src/politrons/Methods_test.go)**
-* **[Interfaces](features/src/politrons/Interfaces_test.go)**
-* **[Error Handling](features/src/politrons/ErrorHandling_test.go)**
-* **[Concurrency](features/src/politrons/Concurrency_test.go)**
+* **[Types](features/src/politrons/lang/Types_test.go)**
+* **[Collections](features/src/politrons/lang/Collections_test.go)**
+* **[Conditions](features/src/politrons/lang/Conditions_test.go)**
+* **[Functions](features/src/politrons/lang/Functions_test.go)** 
+* **[Methods](features/src/politrons/lang/Methods_test.go)**
+* **[Interfaces](features/src/politrons/lang/Interfaces_test.go)**
+* **[Error Handling](features/src/politrons/lang/ErrorHandling_test.go)**
+* **[Concurrency](features/src/politrons/lang/Concurrency_test.go)**
+
+### Category theory
+![My image](img/pure.png)    
+* **[Maybe](features/src/politrons/categoryTheory/Maybe_test.go)**
 
 ### Programs
 ![My image](img/programs.jpg)    
