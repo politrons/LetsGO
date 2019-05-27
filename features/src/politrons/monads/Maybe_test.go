@@ -15,10 +15,10 @@ func TestMaybeJust(t *testing.T) {
 	println(maybe.isDefined())
 	println(maybe.Get().(string))
 	result := 
-	maybe.Then(func(i interface{}) interface{} {
+	maybe.Map(func(i interface{}) interface{} {
 		return strings.ToUpper(i.(string))
-	}).Then(func(i interface{}) interface{} {
-		return i.(string) + "!!!"
+	}).FlatMap(func(i interface{}) Maybe {
+		return Just{i.(string) + "!!!"}
 	}).Get().(string)
 	println(result)
 }
@@ -34,7 +34,9 @@ type Maybe interface {
 	Pure(interface{}) Maybe
 	isDefined() bool
 	Get() interface{}
-	Then(func(interface{}) interface{}) Maybe
+	Map(func(interface{}) interface{}) Maybe
+	FlatMap(func(interface{}) Maybe) Maybe
+
 }
 
 //Allegra of the Maybe monad
@@ -61,8 +63,12 @@ func (just Just) Get() interface{} {
 }
 
 //Composition operator, having a Just we get the value from it, and we return another Just.
-func (just Just) Then(fn func(interface{}) interface{}) Maybe {
+func (just Just) Map(fn func(interface{}) interface{}) Maybe {
 	return Just{fn(just.Get())}
+}
+
+func (just Just) FlatMap(fn func(interface{}) Maybe) Maybe {
+	return fn(just.Get())
 }
 
 func (n Nothing) Pure(i interface{}) Maybe {
@@ -77,7 +83,11 @@ func (n Nothing) Get() interface{} {
 	return nil
 }
 
-func (n Nothing) Then(fn func(interface{}) interface{}) Maybe {
+func (n Nothing) Map(fn func(interface{}) interface{}) Maybe {
+	return nil
+}
+
+func (n Nothing) FlatMap(fn func(interface{}) Maybe) Maybe {
 	return nil
 }
 
