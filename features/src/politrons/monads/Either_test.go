@@ -30,7 +30,7 @@ func TestLeftMonad(t *testing.T) {
 }
 
 //###########################
-//#	   Monad algebras       #
+//#	     Monad algebras     #
 //###########################
 
 /*
