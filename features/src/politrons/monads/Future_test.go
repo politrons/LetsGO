@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 )
+
 func TestFutureSuccess(t *testing.T) {
 	futureMonad := FutureSuccess{nil}.
 		Create(func() interface{} {
@@ -25,9 +26,15 @@ var upperCaseFunc = func(i interface{}) interface{} {
 }
 
 //###########################
-//    Monad algebras    
+//    Monad algebras
 //###########################
 
+/*
+Future monad provide the next functions:
+	* [Create] To create a new Future Monad.
+	* [Map] To transform the value that contains one channel into another after apply a function.
+	* [Get] To get the value from the channel that the Future contains.
+*/
 type Future interface {
 	Create(func() interface{}) Future
 	Map(func(interface{}) interface{}) Future
@@ -40,7 +47,7 @@ type FutureSuccess struct {
 }
 
 //###########################
-//  Monad implementation   
+//  Monad implementation
 //###########################
 
 //Function that create a Monad Future where set the channel where the async execution set the return value
