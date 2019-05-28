@@ -34,7 +34,7 @@ var appendFunc = func(i interface{}) interface{} {
 }
 
 //###########################
-//#	     Monad algebras     #
+//    Monad algebras     
 //###########################
 
 /*
@@ -59,7 +59,7 @@ type Left struct {
 }
 
 //###########################
-//#	 Monad implementation   #
+// Monad implementation   
 //###########################
 
 //Function to transform the monad applying another function over the monad value

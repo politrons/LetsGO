@@ -25,7 +25,7 @@ var upperCaseFunc = func(i interface{}) interface{} {
 }
 
 //###########################
-//#	     Monad algebras     #
+//    Monad algebras    
 //###########################
 
 type Future interface {
@@ -40,7 +40,7 @@ type FutureSuccess struct {
 }
 
 //###########################
-//#	 Monad implementation   #
+//  Monad implementation   
 //###########################
 
 //Function that create a Monad Future where set the channel where the async execution set the return value
