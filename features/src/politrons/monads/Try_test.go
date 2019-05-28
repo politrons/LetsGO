@@ -6,11 +6,13 @@ import (
 )
 
 func TestSucceedMonad(t *testing.T) {
-	tryMonad := getTry("Hello Try monad in Go").Map(func(i interface{}) interface{}{
-		return strings.ToUpper(i.(string))
-	}).Map(func(i interface{}) interface{}{
-		return i.(string) + "!!!!!"
-	})
+	tryMonad := getTry("Hello Try monad in Go").
+		Map(func(i interface{}) interface{} {
+			return strings.ToUpper(i.(string))
+		}).
+		Map(func(i interface{}) interface{} {
+			return i.(string) + "!!!!!"
+		})
 	println(tryMonad.isSuccess())
 	println(tryMonad.isFailure())
 	response := tryMonad.Get().(string)
@@ -18,9 +20,10 @@ func TestSucceedMonad(t *testing.T) {
 }
 
 func TestFailureMonad(t *testing.T) {
-	tryMonad := getTry(MyError{"Custom error in Go"}).MapError(func(e error)error {
-		return MyError{e.Error() + " Append extra error info"}
-	})
+	tryMonad := getTry(MyError{"Custom error in Go"}).
+		MapError(func(e error) error {
+			return MyError{e.Error() + " Append extra error info"}
+		})
 	println(tryMonad.isSuccess())
 	println(tryMonad.isFailure())
 	response := tryMonad.Get().(error)
@@ -36,7 +39,7 @@ A monad Try has two variants, [Success] and [Failure] here using interface, we c
 both variants.
 */
 type Try interface {
-	Map(func(interface{})interface {}) Try
+	Map(func(interface{}) interface{}) Try
 	MapError(func(error) error) Try
 	Get() interface{}
 	isSuccess() bool
@@ -58,12 +61,12 @@ type Failure struct {
 //###########################
 
 //Function to transform the monad applying another function over the monad value
-func (s Success) Map(fn func(interface{})interface {}) Try {
+func (s Success) Map(fn func(interface{}) interface{}) Try {
 	return Success{fn(s.Value)}
 }
 
 //Function to transform the monad error applying another function over the monad value
-func (s Success) MapError(fn func(error)error) Try {
+func (s Success) MapError(fn func(error) error) Try {
 	return nil
 }
 
@@ -82,7 +85,7 @@ func (s Success) isFailure() bool {
 	return false
 }
 
-func (f Failure) Map(fn func(interface{}) interface {}) Try {
+func (f Failure) Map(fn func(interface{}) interface{}) Try {
 	return nil
 }
 

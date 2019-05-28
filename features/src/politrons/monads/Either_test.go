@@ -6,27 +6,31 @@ import (
 )
 
 func TestRightMonad(t *testing.T) {
-	eitherMonad := getEither("Hello Either Right monad in Go", true).Map(func(i interface{}) interface{}{
-   		return strings.ToUpper(i.(string))
-   	}).Map(func(i interface{}) interface{}{
-   		return i.(string) + "!!!!!"
-   	})
-	println("Right:",eitherMonad.isRight())
-	println("Left:",eitherMonad.isLeft())
-   	response := eitherMonad.Get().(string)
-   	println(response)
+	eitherMonad := getEither("Hello Either Right monad in Go", true).
+		Map(upperFunc).
+		Map(appendFunc)
+	println("Right:", eitherMonad.isRight())
+	println("Left:", eitherMonad.isLeft())
+	response := eitherMonad.Get().(string)
+	println(response)
 }
 
 func TestLeftMonad(t *testing.T) {
-	eitherMonad := getEither("Hello Either Left monad in Go", false).Map(func(i interface{}) interface{}{
-		return strings.ToUpper(i.(string))
-	}).Map(func(i interface{}) interface{}{
-		return i.(string) + "!!!!!"
-	})
-	println("Right:",eitherMonad.isRight())
-	println("Left:",eitherMonad.isLeft())
+	eitherMonad := getEither("Hello Either Left monad in Go", false).
+		Map(upperFunc).
+		Map(appendFunc)
+	println("Right:", eitherMonad.isRight())
+	println("Left:", eitherMonad.isLeft())
 	response := eitherMonad.Get().(string)
 	println(response)
+}
+
+var upperFunc = func(i interface{}) interface{} {
+	return strings.ToUpper(i.(string))
+}
+
+var appendFunc = func(i interface{}) interface{} {
+	return i.(string) + "!!!!!"
 }
 
 //###########################
