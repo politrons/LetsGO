@@ -7,13 +7,14 @@ import (
 )
 
 func TestFutureSuccess(t *testing.T) {
-	futureMonad := FutureSuccess{nil}.
-		Create(func() interface{} {
-			return "Hello Future monad in Go"
-		}).
+	futureMonad := FutureSuccess{}.
+		Create("Hello Future monad in Go").
 		Map(upperCaseFunc).
 		Map(func(i interface{}) interface{} {
 			return i.(string) + "!!!!"
+		}).
+		FlatMap(func(i interface{}) Future {
+			return FutureSuccess{}.Create(i.(string) + " In a new go routine")
 		})
 	println("In main routine context execution")
 	println(futureMonad.Get().(string))
@@ -36,8 +37,9 @@ Future monad provide the next functions:
 	* [Get] To get the value from the channel that the Future contains.
 */
 type Future interface {
-	Create(func() interface{}) Future
+	Create(interface{}) Future
 	Map(func(interface{}) interface{}) Future
+	FlatMap(func(interface{}) Future) Future
 	Get() interface{}
 }
 
@@ -51,10 +53,10 @@ type FutureSuccess struct {
 //###########################
 
 //Function that create a Monad Future where set the channel where the async execution set the return value
-func (fs FutureSuccess) Create(fn func() interface{}) Future {
+func (fs FutureSuccess) Create(i interface{}) Future {
 	channel := make(chan interface{})
 	go func() {
-		channel <- fn()
+		channel <- i
 	}()
 	return FutureSuccess{channel}
 }
@@ -67,6 +69,18 @@ func (fs FutureSuccess) Map(fn func(interface{}) interface{}) Future {
 	channel := make(chan interface{})
 	go func() {
 		channel <- fn(<-fs.Channel)
+	}()
+	return FutureSuccess{channel}
+}
+
+/*
+With [FlatMap] we can do composition of Future Monads, so we can execute every computation async sequentally
+without have to do any block.
+*/
+func (fs FutureSuccess) FlatMap(fn func(interface{}) Future) Future {
+	channel := make(chan interface{})
+	go func() {
+		channel <- fn(<-fs.Channel).Get()
 	}()
 	return FutureSuccess{channel}
 }
