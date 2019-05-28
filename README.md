@@ -23,6 +23,7 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 ### Monads
 ![My image](img/pure.png)    
 * **[Maybe](features/src/politrons/monads/Maybe_test.go)**
+* **[Try](features/src/politrons/monads/Try_test.go)**
 
 ### Programs
 ![My image](img/programs.jpg)    
