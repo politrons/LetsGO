@@ -23,10 +23,10 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 
 ### Monads
 ![My image](img/pure.png)    
-* **[Maybe](features/src/politrons/monads/Maybe_test.go)**
-* **[Try](features/src/politrons/monads/Try_test.go)**
+* **[Maybe](features/src/politrons/monads/Maybe.go)**
+* **[Try](features/src/politrons/monads/Try.go)**
 * **[Either](features/src/politrons/monads/Either.go)**
-* **[Future](features/src/politrons/monads/Future_test.go)**
+* **[Future](features/src/politrons/monads/Future.go)**
 
 ### Patterns
 ![My image](img/pattern.png)    
