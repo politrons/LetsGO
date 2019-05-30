@@ -1,13 +1,13 @@
-package main
+package lang
 
 import (
 	"fmt"
-	"testing"
 	"strings"
+	"testing"
 )
 
 type MethodFoo struct {
-	age int
+	age  int
 	name string
 }
 
@@ -22,25 +22,25 @@ Method extensions only works with [type] so it force us to create Types, which i
 
 it's also possible combine multiple method extensions.
 */
-func TestMethodFeatures(t *testing.T){
+func TestMethodFeatures(t *testing.T) {
 	foo := MethodFoo{38, "politrons"}
 	newFoo := foo.upperCaseMethod()
 	fmt.Println(newFoo)
 
-	myList := MyList{"hello", "golang","bla","world","extension","methods","it`s", "cool"}
+	myList := MyList{"hello", "golang", "bla", "world", "extension", "methods", "it`s", "cool"}
 	newList := myList.deleteByIndex(2).toUpprCase()
 	fmt.Println(newList)
 }
 
-func (foo MethodFoo) upperCaseMethod() MethodFoo{
-	return MethodFoo{ age: 38, name:  strings.ToUpper(foo.name) + "!!" }
+func (foo MethodFoo) upperCaseMethod() MethodFoo {
+	return MethodFoo{age: 38, name: strings.ToUpper(foo.name) + "!!"}
 }
 
 //Function that extend the functionality of the type List and allow delete elements in the list by index.
-func (myList MyList) deleteByIndex(i int) MyList{
+func (myList MyList) deleteByIndex(i int) MyList {
 	newList := []string{}
-	for index,value := range myList {
-		if(i != index){
+	for index, value := range myList {
+		if i != index {
 			newList = append(newList, value)
 		}
 	}
@@ -48,8 +48,10 @@ func (myList MyList) deleteByIndex(i int) MyList{
 }
 
 //Function that iterate the internal type that extend and put every element in upperCase.
-func (myList MyList) toUpprCase() MyList{
+func (myList MyList) toUpprCase() MyList {
 	newList := []string{}
-	for _,value := range myList { newList = append(newList, strings.ToUpper(value)) }
+	for _, value := range myList {
+		newList = append(newList, strings.ToUpper(value))
+	}
 	return newList
 }

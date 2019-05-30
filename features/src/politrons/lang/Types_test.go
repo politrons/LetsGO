@@ -1,4 +1,4 @@
-package main
+package lang
 
 import (
 	"fmt"
@@ -14,9 +14,9 @@ type Name string
 type Age int
 type Sex string
 
-//In Go in order to be detected as Unit test by the test framework you need to start the 
+//In Go in order to be detected as Unit test by the test framework you need to start the
 //Test case with [Test] also the file name must end with [_test.go]
-func TestTypes(t *testing.T){
+func TestTypes(t *testing.T) {
 	primitiveTypes()
 	constTypes()
 	typeStruct()
@@ -47,7 +47,7 @@ func primitiveTypes() {
 	var i int = 1
 	var f float64 = 1.1
 	var b bool = false
- 	s := "Hello Go"
+	s := "Hello Go"
 	var stringVal, intVal, boolVal = "String value", 1, true
 	println(i, f, b, s, stringVal, intVal, boolVal)
 }

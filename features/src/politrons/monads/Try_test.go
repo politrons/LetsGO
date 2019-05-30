@@ -1,4 +1,4 @@
-package main
+package monads
 
 import (
 	"strings"
@@ -31,7 +31,7 @@ func TestFailureMonad(t *testing.T) {
 }
 
 //###########################
-//  Monad algebras       
+//  Monad algebras
 //###########################
 
 /*
@@ -57,7 +57,7 @@ type Failure struct {
 }
 
 //###########################
-// Monad implementation   
+// Monad implementation
 //###########################
 
 //Function to transform the monad applying another function over the monad value
