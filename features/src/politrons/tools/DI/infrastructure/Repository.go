@@ -1,6 +1,7 @@
 package infrastructure
 
 import (
+	. "politrons/monads"
 	"politrons/tools/DI/domain"
 )
 
@@ -22,7 +23,7 @@ func NewUserRepository() UserRepositoryImpl {
 Here we apply IOC and we implement the interface [UserRepositoryImpl] avoiding to have a dependency with
 Higher level [infrastructure]
 */
-func (repository UserRepositoryImpl) Save(user domain.User) (chan domain.User, error) {
+func (repository UserRepositoryImpl) Save(user domain.User) chan Either {
 	//Some logic of orchestration to persist the User.
 	//Maybe multiple interactions with the DAO to have transactional
 	return repository.dao.Save(user)

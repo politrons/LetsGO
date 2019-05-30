@@ -1,5 +1,7 @@
 package domain
 
+import . "politrons/monads"
+
 //Entity of the domain
 type User struct {
 	Id       string
@@ -15,7 +17,7 @@ The [infrastructure] it will have a dependency with the [domain] and it will imp
 this interface
 */
 type UserRepository interface {
-	Save(user User) (chan User, error)
+	Save(user User) chan Either
 }
 
 //EntityAggregateRoot will store the implementation of [UserRepository] implemented in [Repository]
@@ -30,10 +32,10 @@ func CreateEntityAggregateRoot(userRepository UserRepository) EntityAggregateRoo
 	return EntityAggregateRoot{userRepository}
 }
 
-/**
+/*
 Function extension of [EntityAggregateRoot] that use the internal dependency implementation to persist the user.
 */
-func (entityAggregateRoot EntityAggregateRoot) RegisterUser(name string, email string, password string) (chan User, error) {
+func (entityAggregateRoot EntityAggregateRoot) RegisterUser(name string, email string, password string) chan Either {
 	user := User{Name: "Politrons", Email: "pol@gmail.com", Password: "changeme"}
 	return entityAggregateRoot.userRepository.Save(user)
 }

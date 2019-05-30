@@ -20,10 +20,11 @@ Having this we achieve that the lower level of the architecture never has a depe
 func TestDependencyInjectionInDDD(t *testing.T) {
 	userRepository := infrastructure.NewUserRepository()
 	entityAggregateRoot := domain.CreateEntityAggregateRoot(userRepository)
-	channelUser, err := entityAggregateRoot.RegisterUser("Politrons", "pol@gmail.com", "changeme")
-	if err != nil {
-		fmt.Println("Error persisting user:", err)
+	channelEither := entityAggregateRoot.RegisterUser("Politrons", "pol@gmail.com", "changeme")
+	either := <-channelEither
+	if either.IsLeft() {
+		fmt.Println("Error persisting user:", either.Get().(error))
 	} else {
-		fmt.Println("User persisted:", <-channelUser)
+		fmt.Println("User persisted:", either.Get().(domain.User))
 	}
 }

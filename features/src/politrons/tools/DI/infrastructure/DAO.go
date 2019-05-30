@@ -2,11 +2,12 @@ package infrastructure
 
 import (
 	"fmt"
+	. "politrons/monads"
 	"politrons/tools/DI/domain"
 )
 
 type DAO interface {
-	Save(user domain.User) (chan domain.User, error)
+	Save(user domain.User) chan Either
 }
 
 //Type that it will Implement the interface DAO
@@ -23,12 +24,12 @@ func NewDAO() DAOImpl {
 Implementation of the interface [DAO] and type [DAOImpl]
 Access to database normally take time and it's blocking, so it's more efficient make it async
 */
-func (dao DAOImpl) Save(user domain.User) (chan domain.User, error) {
-	channel := make(chan domain.User)
+func (dao DAOImpl) Save(user domain.User) chan Either {
+	channel := make(chan Either)
 	go func() {
 		fmt.Println("Persisting user:", user)
 		user.Id = "newId"
-		channel <- user
+		channel <- Right{user}
 	}()
-	return channel, nil
+	return channel
 }
