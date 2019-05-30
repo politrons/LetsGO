@@ -28,6 +28,10 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 * **[Either](features/src/politrons/monads/Either_test.go)**
 * **[Future](features/src/politrons/monads/Future_test.go)**
 
+### Patterns
+
+* **[Dependency Injection & DDD](features/src/politrons/tools/DI)**
+
 ### Programs
 ![My image](img/programs.jpg)    
 
