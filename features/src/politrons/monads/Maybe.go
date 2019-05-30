@@ -1,5 +1,11 @@
 package monads
 
+/*
+Go cannot escape of FP, it's a powerful tool, and even having to do it without lambdas the concept of
+transformation and composition can being applyied.
+Here applying interfarces type with method extensions allow us that Maybe interface can have variant
+[Just] or [Nothing]. This approach works pretty similar like type classes of Haskell.
+*/
 //Maybe monad with variant Just or Nothing
 type Maybe interface {
 	Pure(interface{}) Maybe
