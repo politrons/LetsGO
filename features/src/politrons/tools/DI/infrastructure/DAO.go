@@ -6,7 +6,7 @@ import (
 )
 
 type DAO interface {
-	Save(user domain.User) (domain.User, error)
+	Save(user domain.User) (chan domain.User, error)
 }
 
 //Type that it will Implement the interface DAO
@@ -19,9 +19,16 @@ func NewDAO() DAOImpl {
 	return DAOImpl{}
 }
 
-//Implementation of the interface [DAO] and type [DAOImpl]
-func (dao DAOImpl) Save(user domain.User) (domain.User, error) {
-	fmt.Println("Persisting user:", user)
-	user.Id = "newId"
-	return user, nil
+/*
+Implementation of the interface [DAO] and type [DAOImpl]
+Access to database normally take time and it's blocking, so it's more efficient make it async
+*/
+func (dao DAOImpl) Save(user domain.User) (chan domain.User, error) {
+	channel := make(chan domain.User)
+	go func() {
+		fmt.Println("Persisting user:", user)
+		user.Id = "newId"
+		channel <- user
+	}()
+	return channel, nil
 }
