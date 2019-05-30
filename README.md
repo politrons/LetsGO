@@ -29,7 +29,7 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 * **[Future](features/src/politrons/monads/Future_test.go)**
 
 ### Patterns
-![My image](img/design.png)    
+![My image](img/pattern.png)    
 * **[Dependency Injection & DDD](features/src/politrons/tools/DI)**
 
 ### Programs
