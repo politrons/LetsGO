@@ -1,6 +1,7 @@
 package monads
 
 import (
+	"reflect"
 	"strings"
 )
 
@@ -25,6 +26,7 @@ type Either interface {
 	Get() interface{}
 	IsRight() bool
 	IsLeft() bool
+	IsTypeOf(interface{}) bool
 }
 
 //All method implementation of this variant must behave as it would be normal for a Right type data
@@ -61,8 +63,12 @@ func (r Right) IsLeft() bool {
 	return false
 }
 
-func (l Left) Map(fn func(interface{}) interface{}) Either {
-	return Left{fn(l.Value)}
+func (r Right) IsTypeOf(i interface{}) bool {
+	return reflect.TypeOf(r.Get()) == reflect.TypeOf(i)
+}
+
+func (l Left) IsTypeOf(i interface{}) bool {
+	return reflect.TypeOf(l.Get()) == reflect.TypeOf(i)
 }
 
 func (l Left) Get() interface{} {

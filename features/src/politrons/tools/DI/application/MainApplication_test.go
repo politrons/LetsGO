@@ -25,6 +25,10 @@ func TestDependencyInjectionInDDD(t *testing.T) {
 	if either.IsLeft() {
 		fmt.Println("Error persisting user:", either.Get().(error))
 	} else {
-		fmt.Println("User persisted:", either.Get().(domain.User))
+		if (either.IsTypeOf(domain.User{})) {
+			fmt.Println("User persisted:", either.Get().(domain.User))
+		} else {
+			fmt.Println("Wrong type returned in Either:", either.Get())
+		}
 	}
 }
