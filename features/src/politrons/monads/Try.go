@@ -74,11 +74,3 @@ func (f Failure) isSuccess() bool {
 func (f Failure) isFailure() bool {
 	return true
 }
-
-type MyError struct {
-	cause string
-}
-
-func (e MyError) Error() string {
-	return e.cause
-}

@@ -7,8 +7,6 @@ import (
 	"sync"
 	"testing"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 /*
@@ -110,13 +108,13 @@ Using for { select { } } structure we can have some sort of switch where we can 
 and assing an action once the process has finish. The order is not establish and it will block until all the process
 are done.
 */
-func TestChannelSelect(t *testing.T) {
+func testChannelSelect(t *testing.T) {
 	channel1 := make(chan string)
 	channel2 := make(chan string)
 	channel3 := make(chan string)
-	go asyncRandomString(channel1)
-	go asyncRandomString(channel2)
-	go asyncRandomString(channel3)
+	go asyncRandomString(channel1, "Hello")
+	go asyncRandomString(channel2, "golang")
+	go asyncRandomString(channel3, "world")
 	for {
 		select {
 		case value1 := <-channel1:
@@ -129,9 +127,8 @@ func TestChannelSelect(t *testing.T) {
 	}
 }
 
-func asyncRandomString(channel chan string) {
-	randomVal, _ := uuid.NewUUID()
-	channel <- randomVal.String()
+func asyncRandomString(channel chan string, value string) {
+	channel <- value
 }
 
 /*

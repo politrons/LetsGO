@@ -71,6 +71,10 @@ func (l Left) IsTypeOf(i interface{}) bool {
 	return reflect.TypeOf(l.Get()) == reflect.TypeOf(i)
 }
 
+func (l Left) Map(fn func(interface{}) interface{}) Either {
+	return Left{fn(l.Value)}
+}
+
 func (l Left) Get() interface{} {
 	return l.Value
 }

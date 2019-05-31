@@ -44,6 +44,10 @@ func getTry(i interface{}) Try {
 	}
 }
 
+type MyError struct {
+	cause string
+}
+
 func (e MyError) Error() string {
 	return e.cause
 }
