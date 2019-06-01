@@ -82,7 +82,11 @@ type Match struct {
 	Value interface{}
 }
 
-//Implementation of the Case to check if the Match bind with the interface type passed.
+/*
+Implementation of the Case to check if the Match bind with the interface type passed.
+In case that match we execute the function passed, passing the value of the Match value, and
+we wrap the result of the function into another Match.
+*/
 func (m Match) Case(i interface{}, fn func(interface{}) interface{}) Match {
 	hasSameType := reflect.TypeOf(m.Value) == reflect.TypeOf(i)
 	if hasSameType {
