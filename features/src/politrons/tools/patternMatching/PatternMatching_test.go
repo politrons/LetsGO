@@ -2,7 +2,9 @@ package patternMatching
 
 import (
 	"fmt"
-	. "politrons/monads"
+	"politrons/monads"
+	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -12,54 +14,127 @@ Here we show how we can match the type with the variant type of the Monads, as w
 */
 func TestPatternMatchingEither(t *testing.T) {
 	switch monad := getEither("Hello pattern matching in Golang", true).(type) {
-	case Right:
+	case monads.Right:
 		fmt.Println("Right side of the Monad Either", monad)
-	case Left:
+	case monads.Left:
 		fmt.Println("Left side of the Monad Either", monad)
 	}
 }
 
 func TestPatternMatchingMaybe(t *testing.T) {
 	switch monad := getMaybe("Hello pattern matching in Golang").(type) {
-	case Just:
+	case monads.Just:
 		fmt.Println("Monad Maybe has monad", monad)
-	case Nothing:
+	case monads.Nothing:
 		fmt.Println("Monad Maybe is empty", monad)
 	}
 }
 
 func TestPatternMatchingTry(t *testing.T) {
 	switch monad := getTry("Hello pattern matching in Golang").(type) {
-	case Success:
+	case monads.Success:
 		fmt.Println("Monad Try finish successful with monad", monad)
-	case Failure:
+	case monads.Failure:
 		fmt.Println("Monad Try finish wrong with error", monad)
 	}
 }
 
-func getEither(value string, right bool) Either {
+/*
+Here using our own type and extended method, we can create this pseudo Pattern matching where
+we can match the initial value passed in the [Match] with every operation with the type passed in
+the [Case]. Using reflect, if the type match we execute the function with the init value passed into the Match.
+*/
+func TestOwnPatternMatchingTrySuccess(t *testing.T) {
+	value := Match{getTry("Hello pattern matching Try in Golang")}.
+		Case(monads.Success{}, func(i interface{}) interface{} {
+			return strings.ToUpper(i.(monads.Success).Value.(string))
+		}).
+		Case(monads.Failure{}, func(i interface{}) interface{} {
+			return i.(error).Error() + " append extra error"
+		}).Value
+	println(value.(string))
+}
+
+func TestOwnPatternMatchingEither(t *testing.T) {
+	value := Match{getEither("Hello pattern matching Either in Golang", true)}.
+		Case(monads.Right{}, func(i interface{}) interface{} {
+			return strings.ToUpper(i.(monads.Right).Value.(string))
+		}).
+		Case(monads.Left{}, func(i interface{}) interface{} {
+			return i.(monads.Left).Value.(string) + " append extra info of Left"
+		}).Value
+	println(value.(string))
+}
+
+func TestOwnPatternMatchingMaybe(t *testing.T) {
+	value := Match{getMaybe("Hello pattern matching Maybe in Golang")}.
+		Case(monads.Just{}, func(i interface{}) interface{} {
+			return strings.ToUpper(i.(monads.Just).Value.(string))
+		}).
+		Case(monads.Nothing{}, func(i interface{}) interface{} {
+			return "Default data"
+		}).Value
+	println(value.(string))
+}
+
+//Type of the Pattern matching
+type Match struct {
+	Value interface{}
+}
+
+//Implementation of the Case to check if the Match bind with the interface type passed.
+func (m Match) Case(i interface{}, fn func(interface{}) interface{}) Match {
+	hasSameType := reflect.TypeOf(m.Value) == reflect.TypeOf(i)
+	if hasSameType {
+		return Match{fn(m.Value)}
+	}
+	return m
+}
+
+// Utils functions
+//--------------------
+
+func getEither(value string, right bool) monads.Either {
 	if right {
-		return Right{value}
+		return monads.Right{value}
 	} else {
-		return Left{value}
+		return monads.Left{value}
 	}
 }
 
-func getMaybe(value string) Maybe {
+func getMaybe(value string) monads.Maybe {
 	if value != "" {
-		return Just{value}
+		return monads.Just{value}
 	} else {
-		return Nothing{}
+		return monads.Nothing{}
 	}
 }
 
-func getTry(i interface{}) Try {
+func getTry(i interface{}) monads.Try {
 	switch value := i.(type) {
 	case string:
-		return Success{value}
+		return monads.Success{value}
 	case error:
-		return Failure{value}
+		return monads.Failure{value}
 	default:
 		panic("Not controlled option")
 	}
 }
+
+type MyError struct {
+	cause string
+}
+
+func (e MyError) Error() string {
+	return e.cause
+}
+
+type String struct {
+	Value string
+}
+
+type Int struct {
+	Value int
+}
+
+type lambda func(i interface{}) interface{}
