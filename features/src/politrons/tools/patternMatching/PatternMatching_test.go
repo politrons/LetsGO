@@ -120,21 +120,3 @@ func getTry(i interface{}) monads.Try {
 		panic("Not controlled option")
 	}
 }
-
-type MyError struct {
-	cause string
-}
-
-func (e MyError) Error() string {
-	return e.cause
-}
-
-type String struct {
-	Value string
-}
-
-type Int struct {
-	Value int
-}
-
-type lambda func(i interface{}) interface{}
