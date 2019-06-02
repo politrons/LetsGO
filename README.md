@@ -32,6 +32,7 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 ![My image](img/pattern.png)    
 * **[Dependency Injection & DDD](features/src/politrons/tools/DI)**
 * **[Pattern matching](features/src/politrons/tools/patternMatching/PatternMatching_test.go)**
+* **[Strategy](features/src/politrons/tools/Strategy_test.go)**
 
 ### Programs
 ![My image](img/programs.jpg)    
