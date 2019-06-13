@@ -42,7 +42,7 @@ We extract from the request the argument [orderId] which we will use to find in 
 func findOrderHandle(response http.ResponseWriter, request *http.Request) {
 	log.Printf("Finding order %s!", request.URL.Path[1:])
 	orderId := request.URL.Path[1:]
-	order := orderService.FindOrder(domain.OrderId{orderId})
+	order := orderService.FindOrder(domain.OrderId{Id: orderId})
 	jsonResponse, err := json.Marshal(order)
 	if err != nil {
 		panic(err)
