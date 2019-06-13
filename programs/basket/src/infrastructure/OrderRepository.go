@@ -12,8 +12,8 @@ func CreateOrderRepository() OrderRepositoryImpl {
 	return OrderRepositoryImpl{database: make(map[string]Order)}
 }
 
-//Here we implement the [CreateOrder] of interface [OrderRepository] that is defined in the Domain module to have IOC.
-func (repository OrderRepositoryImpl) CreateOrder(order Order) Order {
+//Here we implement the [UpsertOrder] of interface [OrderRepository] that is defined in the Domain module to have IOC.
+func (repository OrderRepositoryImpl) UpsertOrder(order Order) Order {
 	repository.database[order.OrderId.Id] = order
 	return order
 }

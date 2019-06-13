@@ -40,8 +40,8 @@ Function that receive the request and response to handle the communication.
 We extract from the request the argument [orderId] which we will use to find in the database in memory.
 */
 func findOrderHandle(response http.ResponseWriter, request *http.Request) {
-	log.Printf("Finding order %s!", request.URL.Path[1:])
 	orderId := request.URL.Path[1:]
+	log.Printf("Finding order %s!", orderId)
 	order := orderService.FindOrder(domain.OrderId{Id: orderId})
 	jsonResponse, err := json.Marshal(order)
 	if err != nil {
@@ -70,9 +70,24 @@ func createOrderHandle(response http.ResponseWriter, request *http.Request) {
 	_, _ = response.Write(jsonResponse)
 }
 
-func addProductHandle(w http.ResponseWriter, r *http.Request) {
-	log.Println("Add product in Order with id")
-	fmt.Fprintf(w, "Adding product  %s!", r.URL.Path[1:])
+func addProductHandle(response http.ResponseWriter, request *http.Request) {
+	orderId := request.URL.Path[1:]
+	log.Printf("Add product for order %s!", orderId)
+	decoder := json.NewDecoder(request.Body)
+	addProductCommand := commands.AddProduct{}
+	err := decoder.Decode(&addProductCommand)
+	if err != nil {
+		panic(err)
+		println("Error decoding add product command")
+	}
+	order := orderHandler.UpdateOrder(domain.OrderId{Id: orderId}, addProductCommand)
+	jsonResponse, err := json.Marshal(order)
+	if err != nil {
+		panic(err)
+	}
+	response.Header().Set("Content-Type", "application/jsonResponse")
+	response.WriteHeader(http.StatusOK)
+	_, _ = response.Write(jsonResponse)
 
 }
 

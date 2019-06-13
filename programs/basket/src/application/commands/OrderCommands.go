@@ -4,10 +4,9 @@ type CreateOrder struct {
 }
 
 type AddProduct struct {
-	orderId            string
-	productId          string
-	productDescription string
-	price              float64
+	ProductId          string
+	ProductDescription string
+	Price              float64
 }
 
 type RemoveProduct struct {

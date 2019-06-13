@@ -13,13 +13,14 @@ type OrderId struct {
 }
 
 type Product struct {
+	ProductId   string
 	Price       float64
 	Description string
 }
 
 type Order struct {
 	OrderId    OrderId
-	Product    Product
+	Products   []Product
 	TotalPrice float64
 }
 
@@ -40,7 +41,7 @@ In order to receive an implementation of the Repository, domain is the one that 
 */
 type OrderRepository interface {
 	FindOrder(id OrderId) Order
-	CreateOrder(order Order) Order
+	UpsertOrder(order Order) Order
 }
 
 //####################################//
@@ -54,8 +55,16 @@ func CreateOrderAggregateRoot(repository OrderRepository) OrderAggregateRoot {
 func (aggregateRoot OrderAggregateRoot) CreateOrder() Order {
 	orderId, err := uuid.NewV4()
 	if err != nil {
-		return Order{OrderId{"Error creating OrderId"}, Product{}, 0.0}
+		return Order{OrderId{"Error creating OrderId"}, make([]Product, 1), 0.0}
 	}
-	order := Order{OrderId: OrderId{orderId.String()}, Product: Product{}, TotalPrice: 0.0}
-	return aggregateRoot.repository.CreateOrder(order)
+	order := Order{OrderId: OrderId{orderId.String()}, Products: make([]Product, 1), TotalPrice: 0.0}
+	return aggregateRoot.repository.UpsertOrder(order)
+}
+
+func (aggregateRoot OrderAggregateRoot) UpdateOrder(orderId OrderId, productId string, price float64, productDescription string) Order {
+	order := aggregateRoot.repository.FindOrder(orderId)
+	product := Product{ProductId: productId, Price: price, Description: productDescription}
+	order.Products = append(order.Products, product)
+	order.TotalPrice = order.TotalPrice + price
+	return aggregateRoot.repository.UpsertOrder(order)
 }

@@ -3,8 +3,10 @@ package handle
 import (
 	"application/commands"
 	. "domain"
-	"infrastructure"
+	. "infrastructure"
 )
+
+var repository = CreateOrderRepository()
 
 //Type of OrderHandler that define all types that contains.
 type OrderHandler struct {
@@ -19,14 +21,22 @@ Also the [OrderAggregateRoot] require a DI for the repository in order to persis
 have to pass the dependency in the constructor of the type.
 */
 func CreateOrderHandler() OrderHandler {
-	orderAggregateRoot := CreateOrderAggregateRoot(infrastructure.CreateOrderRepository())
+	orderAggregateRoot := CreateOrderAggregateRoot(repository)
 	return OrderHandler{orderAggregateRoot}
 }
 
 /*
 Extended method defined OrderHandler, now all classes that contains an instance of [OrderHandler]
 can use this method.
+Create a new Order using the orderEntityAggregateRoot
 */
 func (handler OrderHandler) CreateOrder(command commands.CreateOrder) Order {
 	return handler.orderAggregateRoot.CreateOrder()
+}
+
+/*
+This method it find the order using the id and it update it adding a new product, and updating the totalPrice
+*/
+func (handler OrderHandler) UpdateOrder(orderId OrderId, command commands.AddProduct) Order {
+	return handler.orderAggregateRoot.UpdateOrder(orderId, command.ProductId, command.Price, command.ProductDescription)
 }
