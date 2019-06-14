@@ -64,7 +64,8 @@ func (aggregateRoot OrderAggregateRoot) CreateOrder() Order {
 func (aggregateRoot OrderAggregateRoot) UpdateOrder(orderId OrderId, productId string, price float64, productDescription string) Order {
 	order := aggregateRoot.repository.FindOrder(orderId)
 	product := Product{ProductId: productId, Price: price, Description: productDescription}
-	order.Products = append(order.Products, product)
+	newProducts := append(order.Products, product)
+	order.Products = newProducts
 	order.TotalPrice = order.TotalPrice + price
 	return aggregateRoot.repository.UpsertOrder(order)
 }

@@ -2,7 +2,6 @@ package service
 
 import (
 	. "domain"
-	"infrastructure"
 )
 
 //Type of [OrderService] which contains all DI types that needs to work.
@@ -11,8 +10,7 @@ type OrderService struct {
 }
 
 //Constructor of [OrderService]
-func CreateOrderService() OrderService {
-	repository := infrastructure.CreateOrderRepository()
+func CreateOrderService(repository OrderRepository) OrderService {
 	return OrderService{repository: repository}
 }
 

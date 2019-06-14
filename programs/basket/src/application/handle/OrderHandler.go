@@ -3,10 +3,7 @@ package handle
 import (
 	"application/commands"
 	. "domain"
-	. "infrastructure"
 )
-
-var repository = CreateOrderRepository()
 
 //Type of OrderHandler that define all types that contains.
 type OrderHandler struct {
@@ -20,7 +17,7 @@ DI of [OrderAggregateRoot], which is the responsible for business logic and pers
 Also the [OrderAggregateRoot] require a DI for the repository in order to persist the Model in the infra, so we
 have to pass the dependency in the constructor of the type.
 */
-func CreateOrderHandler() OrderHandler {
+func CreateOrderHandler(repository OrderRepository) OrderHandler {
 	orderAggregateRoot := CreateOrderAggregateRoot(repository)
 	return OrderHandler{orderAggregateRoot}
 }

@@ -7,15 +7,19 @@ import (
 	"domain"
 	"encoding/json"
 	"fmt"
+	"infrastructure"
 	"log"
 	"net/http"
+	"strings"
 )
 
+var repository = infrastructure.CreateOrderRepository()
+
 //DI of OrderService to handle Queries
-var orderService = service.CreateOrderService()
+var orderService = service.CreateOrderService(repository)
 
 //DI of OrderHandler to handle Commands
-var orderHandler = handle.CreateOrderHandler()
+var orderHandler = handle.CreateOrderHandler(repository)
 
 /*
 Main method of our Go application to run the server in a port and configure the router to redirect endpoints
@@ -40,7 +44,7 @@ Function that receive the request and response to handle the communication.
 We extract from the request the argument [orderId] which we will use to find in the database in memory.
 */
 func findOrderHandle(response http.ResponseWriter, request *http.Request) {
-	orderId := request.URL.Path[1:]
+	orderId := strings.Split(request.URL.Path, "/")[2]
 	log.Printf("Finding order %s!", orderId)
 	order := orderService.FindOrder(domain.OrderId{Id: orderId})
 	jsonResponse, err := json.Marshal(order)
@@ -71,7 +75,7 @@ func createOrderHandle(response http.ResponseWriter, request *http.Request) {
 }
 
 func addProductHandle(response http.ResponseWriter, request *http.Request) {
-	orderId := request.URL.Path[1:]
+	orderId := strings.Split(request.URL.Path, "/")[3]
 	log.Printf("Add product for order %s!", orderId)
 	decoder := json.NewDecoder(request.Body)
 	addProductCommand := commands.AddProduct{}
