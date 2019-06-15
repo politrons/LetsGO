@@ -11,7 +11,7 @@ Examples of a real Go Http service with Idempotent API, that use design patterns
 
 ### Run
 
-Just go to the file **BasketRunner_test.go** and run the **Main** method.
+Just go to the file [BasketRunner_test.go](src/BasketRunner_test.go) and run the **Test** method.
 
 Then just get a curl or postman and consume the API
 
