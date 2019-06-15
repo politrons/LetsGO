@@ -22,6 +22,6 @@ infrastructure layer to get the order.
 In case of Queries, since we need to be fast, we dont delegate the obtain of the Order to the domain,
  but we do an interaction between application and infrastructure layer directly.
 */
-func (service OrderService) FindOrder(orderId OrderId) Order {
+func (service OrderService) FindOrder(orderId OrderId) chan Order {
 	return service.repository.FindOrder(orderId)
 }

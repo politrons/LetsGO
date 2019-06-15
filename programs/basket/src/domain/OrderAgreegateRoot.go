@@ -39,8 +39,8 @@ In order to receive an implementation of the Repository, domain is the one that 
 [OrderRepository] to be implemented by domain module.
 */
 type OrderRepository interface {
-	FindOrder(id OrderId) Order
-	UpsertOrder(order Order) Order
+	FindOrder(id OrderId) chan Order
+	UpsertOrder(order Order) chan Order
 }
 
 //####################################//
@@ -52,32 +52,57 @@ func CreateOrderAggregateRoot(repository OrderRepository) OrderAggregateRoot {
 }
 
 //Function in AggregateRoot to create an Order
-func (aggregateRoot OrderAggregateRoot) CreateOrder() Order {
+func (aggregateRoot OrderAggregateRoot) CreateOrder() chan Order {
+	chanOrder := make(chan Order)
 	orderId, err := uuid.NewV4()
 	if err != nil {
-		return Order{OrderId{"Error creating OrderId"}, make(map[string]Product, 0), 0.0}
+		go func() {
+			chanOrder <- Order{OrderId{"Error creating OrderId"}, make(map[string]Product, 0), 0.0}
+		}()
+	} else {
+		order := Order{OrderId: OrderId{orderId.String()}, Products: make(map[string]Product, 0), TotalPrice: 0.0}
+		chanOrder = aggregateRoot.repository.UpsertOrder(order)
 	}
-	order := Order{OrderId: OrderId{orderId.String()}, Products: make(map[string]Product, 0), TotalPrice: 0.0}
-	return aggregateRoot.repository.UpsertOrder(order)
+	return chanOrder
 }
 
-//Function in AggregateRoot to find the Order, create a new Data model Product, and add it in the map of products in order.
-func (aggregateRoot OrderAggregateRoot) AddProductInOrder(orderId OrderId, productId string, price float64, productDescription string) Order {
-	order := aggregateRoot.repository.FindOrder(orderId)
-	product := Product{Price: price, Description: productDescription}
-	order.Products[productId] = product
-	order.TotalPrice = order.TotalPrice + price
-	return aggregateRoot.repository.UpsertOrder(order)
+/*
+Function in AggregateRoot to find the Order, create a new Data model Product, and add it in the map of products in order.
+
+Since we have a previous [go routine] call that return a channel we need to make composition. We dont want to block waiting
+for the first go channel resolution, so we create a new one and we run a new go routine process, and there we pass
+the first channel output in the second one using double arrow [channel2 <- <-channel1]
+*/
+func (aggregateRoot OrderAggregateRoot) AddProductInOrder(orderId OrderId, productId string, price float64, productDescription string) chan Order {
+	chanOrder := aggregateRoot.repository.FindOrder(orderId)
+	newChanOrder := make(chan Order)
+	go func() {
+		product := Product{Price: price, Description: productDescription}
+		order := <-chanOrder
+		order.Products[productId] = product
+		order.TotalPrice = order.TotalPrice + price
+		newChanOrder <- <-aggregateRoot.repository.UpsertOrder(order)
+	}()
+	return newChanOrder
 }
 
 /*
 Function in AggregateRoot to find the Order, find a Product by id, get discount the total price with the product price,
  and delete it in the map of products in order.
+
+Since we have a previous [go routine] call that return a channel we need to make composition. We dont want to block waiting
+for the first go channel resolution, so we create a new one and we run a new go routine process, and there we pass
+the first channel output in the second one using double arrow [channel2 <- <-channel1]
 */
-func (aggregateRoot OrderAggregateRoot) RemoveProductInOrder(orderId OrderId, productId string) Order {
-	order := aggregateRoot.repository.FindOrder(orderId)
-	product := order.Products[productId]
-	order.TotalPrice = order.TotalPrice - product.Price
-	delete(order.Products, productId)
-	return aggregateRoot.repository.UpsertOrder(order)
+func (aggregateRoot OrderAggregateRoot) RemoveProductInOrder(orderId OrderId, productId string) chan Order {
+	chanOrder := aggregateRoot.repository.FindOrder(orderId)
+	newChanOrder := make(chan Order)
+	go func() {
+		order := <-chanOrder
+		product := order.Products[productId]
+		order.TotalPrice = order.TotalPrice - product.Price
+		delete(order.Products, productId)
+		newChanOrder <- <-aggregateRoot.repository.UpsertOrder(order)
+	}()
+	return newChanOrder
 }

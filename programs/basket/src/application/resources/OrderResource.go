@@ -45,7 +45,7 @@ We extract from the request the argument [orderId] which we will use to find in 
 func findOrderHandle(response http.ResponseWriter, request *http.Request) {
 	orderId := strings.Split(request.URL.Path, "/")[2]
 	log.Printf("Finding order %s!", orderId)
-	order := orderService.FindOrder(OrderId{Id: orderId})
+	order := <-orderService.FindOrder(OrderId{Id: orderId})
 	writeResponse(response, order)
 }
 
@@ -56,7 +56,7 @@ Having this orderId we can make the API idempotent.
 func createOrderHandle(response http.ResponseWriter, request *http.Request) {
 	log.Println("Create new Order in System")
 	createOrderCommand := commands.CreateOrder{}
-	orderId := orderHandler.CreateOrder(createOrderCommand)
+	orderId := <-orderHandler.CreateOrder(createOrderCommand)
 	writeResponse(response, orderId)
 }
 
@@ -74,7 +74,7 @@ func addProductHandle(response http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		writeErrorResponse(response, err)
 	}
-	order := orderHandler.AddProductInOrder(OrderId{Id: orderId}, addProductCommand)
+	order := <-orderHandler.AddProductInOrder(OrderId{Id: orderId}, addProductCommand)
 	writeResponse(response, order)
 }
 
@@ -92,7 +92,7 @@ func removeProductHandle(response http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		writeErrorResponse(response, err)
 	}
-	order := orderHandler.RemoveProductInOrder(OrderId{Id: orderId}, removeProductCommand)
+	order := <-orderHandler.RemoveProductInOrder(OrderId{Id: orderId}, removeProductCommand)
 	writeResponse(response, order)
 }
 
