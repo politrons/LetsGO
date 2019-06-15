@@ -19,13 +19,10 @@ Then just get a curl or postman and consume the API
 
     **Request**
     
-        ```
         http://localhost:8080/order/create/
-        ```
         
     **Response**
     
-        ```
         {
             "OrderId": {
                 "Id": "a5c2b3a2-74e9-48f8-9d84-13c9c6547564"
@@ -33,18 +30,15 @@ Then just get a curl or postman and consume the API
             "Products": {},
             "TotalPrice": 0
         }
-        ```    
 
 * Find order, using as uri param the orderId previously created.
 
     **Request**
     
-        ```
         http://localhost:8080/order/a5c2b3a2-74e9-48f8-9d84-13c9c6547564
-        ```
+
     **Response**
     
-        ```
         {
             "OrderId": {
                 "Id": "a5c2b3a2-74e9-48f8-9d84-13c9c6547564"
@@ -52,29 +46,24 @@ Then just get a curl or postman and consume the API
             "Products": {},
             "TotalPrice": 0
         }
-        ``` 
+
 
 * Add product, using as uri param the orderId previously created.
 
     **Request**
     
-        ```
         http://localhost:8080/order/addProduct/a5c2b3a2-74e9-48f8-9d84-13c9c6547564
-        ```
    
     **Body**
     
-        ```
         {
             "ProductId": "78844a80-a54a-443d-a062-26abe1462387",
             "ProductDescription":"7-up",
             "Price":1.95
         }
-        ```
     
     **Response**
     
-        ```
       {
           "OrderId": {
               "Id": "a5c2b3a2-74e9-48f8-9d84-13c9c6547564"
@@ -87,24 +76,19 @@ Then just get a curl or postman and consume the API
           },
           "TotalPrice": 1.95
       }
-        ``` 
+  
 * Remove product, using as uri param the orderId previously created.
 
     **Request**
     
-        ```
         http://localhost:8080/order/removeProduct/a5c2b3a2-74e9-48f8-9d84-13c9c6547564        
-        ```
         
         Body
         
-        ```
           {"ProductId":"78844a80-a54a-443d-a062-26abe1462387"}
-        ```  
                
     **Response**
     
-        ```
           {
               "OrderId": {
                   "Id": "e4f16f9e-9df2-456c-8c4c-193761e675a9"
@@ -112,4 +96,3 @@ Then just get a curl or postman and consume the API
               "Products": {},
               "TotalPrice": 0
           }
-        ``` 
