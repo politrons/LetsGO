@@ -1,5 +1,5 @@
 
-![My image](../../img/cleanA.jpg)    
+![My image](../../img/basket.png)    
  # Customer order service
   
 Examples of a real Go Http service with Idempotent API, that use design patterns as Dependency Injection, CQRS, DDD,
@@ -83,7 +83,7 @@ Then just get a curl or postman and consume the API
     
         http://localhost:8080/order/removeProduct/a5c2b3a2-74e9-48f8-9d84-13c9c6547564        
         
-        Body
+    **Body**
         
           {"ProductId":"78844a80-a54a-443d-a062-26abe1462387"}
                
