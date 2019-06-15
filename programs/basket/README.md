@@ -17,7 +17,7 @@ Just go to the file [BasketRunner_test.go](src/BasketRunner_test.go) and run the
 
 Then just get a curl or postman and consume the API
 
-* Create order
+* **Create order**
 
     **Request**
     
@@ -33,7 +33,7 @@ Then just get a curl or postman and consume the API
             "TotalPrice": 0
         }
 
-* Find order, using as uri param the orderId previously created.
+* **Find order**, using as uri param the orderId previously created.
 
     **Request**
     
@@ -50,7 +50,7 @@ Then just get a curl or postman and consume the API
         }
 
 
-* Add product, using as uri param the orderId previously created.
+* **Add product**, using as uri param the orderId previously created.
 
     **Request**
     
@@ -79,7 +79,7 @@ Then just get a curl or postman and consume the API
           "TotalPrice": 1.95
       }
   
-* Remove product, using as uri param the orderId previously created.
+* **Remove product**, using as uri param the orderId previously created.
 
     **Request**
     
