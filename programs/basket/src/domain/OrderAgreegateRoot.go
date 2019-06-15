@@ -13,14 +13,13 @@ type OrderId struct {
 }
 
 type Product struct {
-	ProductId   string
 	Price       float64
 	Description string
 }
 
 type Order struct {
 	OrderId    OrderId
-	Products   []Product
+	Products   map[string]Product
 	TotalPrice float64
 }
 
@@ -52,20 +51,33 @@ func CreateOrderAggregateRoot(repository OrderRepository) OrderAggregateRoot {
 	return OrderAggregateRoot{repository, Order{}}
 }
 
+//Function in AggregateRoot to create an Order
 func (aggregateRoot OrderAggregateRoot) CreateOrder() Order {
 	orderId, err := uuid.NewV4()
 	if err != nil {
-		return Order{OrderId{"Error creating OrderId"}, make([]Product, 1), 0.0}
+		return Order{OrderId{"Error creating OrderId"}, make(map[string]Product, 0), 0.0}
 	}
-	order := Order{OrderId: OrderId{orderId.String()}, Products: make([]Product, 1), TotalPrice: 0.0}
+	order := Order{OrderId: OrderId{orderId.String()}, Products: make(map[string]Product, 0), TotalPrice: 0.0}
 	return aggregateRoot.repository.UpsertOrder(order)
 }
 
-func (aggregateRoot OrderAggregateRoot) UpdateOrder(orderId OrderId, productId string, price float64, productDescription string) Order {
+//Function in AggregateRoot to find the Order, create a new Data model Product, and add it in the map of products in order.
+func (aggregateRoot OrderAggregateRoot) AddProductInOrder(orderId OrderId, productId string, price float64, productDescription string) Order {
 	order := aggregateRoot.repository.FindOrder(orderId)
-	product := Product{ProductId: productId, Price: price, Description: productDescription}
-	newProducts := append(order.Products, product)
-	order.Products = newProducts
+	product := Product{Price: price, Description: productDescription}
+	order.Products[productId] = product
 	order.TotalPrice = order.TotalPrice + price
+	return aggregateRoot.repository.UpsertOrder(order)
+}
+
+/*
+Function in AggregateRoot to find the Order, find a Product by id, get discount the total price with the product price,
+ and delete it in the map of products in order.
+*/
+func (aggregateRoot OrderAggregateRoot) RemoveProductInOrder(orderId OrderId, productId string) Order {
+	order := aggregateRoot.repository.FindOrder(orderId)
+	product := order.Products[productId]
+	order.TotalPrice = order.TotalPrice - product.Price
+	delete(order.Products, productId)
 	return aggregateRoot.repository.UpsertOrder(order)
 }

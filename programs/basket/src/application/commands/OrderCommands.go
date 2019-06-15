@@ -10,6 +10,5 @@ type AddProduct struct {
 }
 
 type RemoveProduct struct {
-	orderId   string
-	productId string
+	ProductId string
 }

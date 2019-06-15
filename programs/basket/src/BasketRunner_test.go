@@ -6,5 +6,5 @@ import (
 )
 
 func TestRun(t *testing.T) {
-	resources.Main()
+	resources.HttpServer()
 }

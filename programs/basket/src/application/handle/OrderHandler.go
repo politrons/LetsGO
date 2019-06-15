@@ -23,8 +23,8 @@ func CreateOrderHandler(repository OrderRepository) OrderHandler {
 }
 
 /*
-Extended method defined OrderHandler, now all classes that contains an instance of [OrderHandler]
-can use this method.
+Extended function defined OrderHandler, now all classes that contains an instance of [OrderHandler]
+can use this function.
 Create a new Order using the orderEntityAggregateRoot
 */
 func (handler OrderHandler) CreateOrder(command commands.CreateOrder) Order {
@@ -32,8 +32,12 @@ func (handler OrderHandler) CreateOrder(command commands.CreateOrder) Order {
 }
 
 /*
-This method it find the order using the id and it update it adding a new product, and updating the totalPrice
+This function it find the order using the id and it update it adding a new product, and updating the totalPrice
 */
-func (handler OrderHandler) UpdateOrder(orderId OrderId, command commands.AddProduct) Order {
-	return handler.orderAggregateRoot.UpdateOrder(orderId, command.ProductId, command.Price, command.ProductDescription)
+func (handler OrderHandler) AddProductInOrder(orderId OrderId, command commands.AddProduct) Order {
+	return handler.orderAggregateRoot.AddProductInOrder(orderId, command.ProductId, command.Price, command.ProductDescription)
+}
+
+func (handler OrderHandler) RemoveProductInOrder(orderId OrderId, command commands.RemoveProduct) Order {
+	return handler.orderAggregateRoot.RemoveProductInOrder(orderId, command.ProductId)
 }
