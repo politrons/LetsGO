@@ -1,5 +1,5 @@
 
-![My image](../../../../../img/cleanA.jpg)    
+![My image](../../img/cleanA.jpg)    
  # Customer order service
   
 Examples of a real Go Http service with Idempotent API, that use design patterns as Dependency Injection, CQRS, DDD,
