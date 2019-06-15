@@ -53,17 +53,16 @@ func CreateOrderAggregateRoot(repository OrderRepository) OrderAggregateRoot {
 
 //Function in AggregateRoot to create an Order
 func (aggregateRoot OrderAggregateRoot) CreateOrder() chan Order {
-	chanOrder := make(chan Order)
 	orderId, err := uuid.NewV4()
 	if err != nil {
+		chanError := make(chan Order)
 		go func() {
-			chanOrder <- Order{OrderId{"Error creating OrderId"}, make(map[string]Product, 0), 0.0}
+			chanError <- Order{OrderId{"Error creating OrderId"}, make(map[string]Product, 0), 0.0}
 		}()
-	} else {
-		order := Order{OrderId: OrderId{orderId.String()}, Products: make(map[string]Product, 0), TotalPrice: 0.0}
-		chanOrder = aggregateRoot.repository.UpsertOrder(order)
+		return chanError
 	}
-	return chanOrder
+	order := Order{OrderId: OrderId{orderId.String()}, Products: make(map[string]Product, 0), TotalPrice: 0.0}
+	return aggregateRoot.repository.UpsertOrder(order)
 }
 
 /*
