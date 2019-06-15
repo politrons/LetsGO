@@ -21,7 +21,7 @@ Then just get a curl or postman and consume the API
 
     **Request**
     
-        http://localhost:8080/order/create/
+        POST:http://localhost:8080/order/create/
         
     **Response**
     
@@ -37,7 +37,7 @@ Then just get a curl or postman and consume the API
 
     **Request**
     
-        http://localhost:8080/order/a5c2b3a2-74e9-48f8-9d84-13c9c6547564
+        GET:http://localhost:8080/order/a5c2b3a2-74e9-48f8-9d84-13c9c6547564
 
     **Response**
     
@@ -54,7 +54,7 @@ Then just get a curl or postman and consume the API
 
     **Request**
     
-        http://localhost:8080/order/addProduct/a5c2b3a2-74e9-48f8-9d84-13c9c6547564
+        POST:http://localhost:8080/order/addProduct/a5c2b3a2-74e9-48f8-9d84-13c9c6547564
    
     **Body**
     
@@ -83,7 +83,7 @@ Then just get a curl or postman and consume the API
 
     **Request**
     
-        http://localhost:8080/order/removeProduct/a5c2b3a2-74e9-48f8-9d84-13c9c6547564        
+        POST:http://localhost:8080/order/removeProduct/a5c2b3a2-74e9-48f8-9d84-13c9c6547564        
         
     **Body**
         
