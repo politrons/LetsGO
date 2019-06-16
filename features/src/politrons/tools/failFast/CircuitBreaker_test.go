@@ -30,7 +30,7 @@ The order of execution in package initialization is:
 */
 func init() {
 	var settings gobreaker.Settings
-	settings.Name = "Politrons Circuit Breaker"
+	settings.Name = "Politrons"
 	settings.OnStateChange = onChangeStateFunc
 	settings.ReadyToTrip = maxConsecutiveFailuresStrategyFunc
 	settings.MaxRequests = 1
@@ -43,7 +43,7 @@ Function to be invoked when the state of the Circuit breaker change.
 We receive the name of the circuit breaker, previous and new state of the CB.
 */
 func onChangeStateFunc(name string, from gobreaker.State, to gobreaker.State) {
-	fmt.Printf("Circuit breaker change %s state from %s to %s \n", name, from.String(), to.String())
+	fmt.Printf("Circuit breaker %s change state from %s to %s \n", name, from.String(), to.String())
 }
 
 /*
