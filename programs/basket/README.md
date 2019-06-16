@@ -3,7 +3,7 @@
  # Customer order service
   
 Examples of a real Go Http service with Idempotent API, that use design patterns as Dependency Injection, CQRS, DDD,
- NIO using go routines and channel.
+Fail fast with Circuit breaker and NIO using go routines and channel.
 
 ### DDD Layers
 
