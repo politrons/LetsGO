@@ -33,6 +33,7 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 * **[Dependency Injection & DDD](features/src/politrons/tools/DI)**
 * **[Pattern matching](features/src/politrons/tools/patternMatching/PatternMatching_test.go)**
 * **[Strategy](features/src/politrons/tools/Strategy_test.go)**
+* **[Circuit breaker](features/src/politrons/tools/failFast/CircuitBreaker_test.go)**
 
 ### Programs
 ![My image](img/programs.jpg)    
