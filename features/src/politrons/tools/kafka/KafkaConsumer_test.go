@@ -27,6 +27,7 @@ Using the switch operator with consumerMessage.Topic we route the message into t
 and there we process the message
 */
 const topic = "MyTopic"
+const broker = "localhost:9092"
 
 func TestKafkaConsumer(t *testing.T) {
 	config := cluster.NewConfig()
@@ -39,7 +40,7 @@ func TestKafkaConsumer(t *testing.T) {
 
 func createConsumer(config *cluster.Config) (*cluster.Consumer, error) {
 	return cluster.NewConsumer(
-		[]string{"localhost:9092"},
+		[]string{broker},
 		"group-id",
 		[]string{topic},
 		config)
@@ -75,7 +76,7 @@ func TestKafkaProducer(t *testing.T) {
 
 func createPublisherWriter() *kafka.Writer {
 	return kafka.NewWriter(kafka.WriterConfig{
-		Brokers:  []string{"localhost:9092"},
+		Brokers:  []string{broker},
 		Topic:    topic,
 		Balancer: &kafka.LeastBytes{},
 	})
