@@ -11,6 +11,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/segmentio/kafka-go"
 	"testing"
+	"time"
 )
 
 /*
@@ -80,10 +81,15 @@ func createPublisherWriter() *kafka.Writer {
 	})
 }
 
+/*
+In the publisher we create a context with timeout, to make the goroutine that send the event close in 5 seconds
+if is not able to finish the process
+*/
 func publishEvents(publisher *kafka.Writer) {
 	for {
 		uuidString, _ := uuid.NewRandom()
-		err := publisher.WriteMessages(context.Background(),
+		ctx, _ := context.WithTimeout(context.Background(), time.Duration(5*time.Second))
+		err := publisher.WriteMessages(ctx,
 			kafka.Message{
 				Key:   []byte("Key-" + uuidString.String()),
 				Value: []byte(uuidString.String()),
