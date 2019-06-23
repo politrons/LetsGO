@@ -20,7 +20,8 @@ using [WithCancel], [WithDeadline], [WithTimeout], or [WithValue]. When a Contex
 
 /*
 Using [WithValue] function over context we are able to create a context, as part of the function we need to pass
-an empty context, for that we use [Background()] which returns a non-nil, empty Context
+an empty context, for that we use [Background()] which returns a non-nil, empty Context, and a key/value entry
+in case you want to share some info in the context.
 */
 func TestContextValue(t *testing.T) {
 	key := contextKey("myKey")
