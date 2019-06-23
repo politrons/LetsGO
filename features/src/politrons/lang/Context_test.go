@@ -9,6 +9,16 @@ import (
 )
 
 /*
+
+Context type, allow us contains information together with deadlines, cancelation signals and timeouts.
+
+When we receive a call in our program, we should create a Context, and outgoing calls to servers should accept a Context.
+
+The chain of function calls between them must propagate the Context, optionally replacing it with a derived Context created
+using [WithCancel], [WithDeadline], [WithTimeout], or [WithValue]. When a Context is canceled, all Contexts derived from it are also canceled.
+*/
+
+/*
 Using [WithValue] function over context we are able to create a context, as part of the function we need to pass
 an empty context, for that we use [Background()] which returns a non-nil, empty Context
 */
