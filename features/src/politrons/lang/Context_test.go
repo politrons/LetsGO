@@ -23,21 +23,21 @@ Using [WithValue] function over context we are able to create a context, as part
 an empty context, for that we use [Background()] which returns a non-nil, empty Context
 */
 func TestContextValue(t *testing.T) {
-	type contextKey string
-
-	function := func(ctx context.Context, k contextKey) {
-		if v := ctx.Value(k); v != nil {
-			fmt.Println("found value:", v)
-			return
-		}
-		fmt.Println("key not found:", k)
-	}
-
 	key := contextKey("myKey")
 	ctx := context.WithValue(context.Background(), key, "Go value in context")
 
-	function(ctx, key)
-	function(ctx, contextKey("anotherKey"))
+	extractContextValue(ctx, key)
+	extractContextValue(ctx, contextKey("anotherKey"))
+}
+
+type contextKey string
+
+func extractContextValue(ctx context.Context, k contextKey) {
+	if v := ctx.Value(k); v != nil {
+		fmt.Println("found value:", v)
+		return
+	}
+	fmt.Println("key not found:", k)
 }
 
 /*
