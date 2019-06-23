@@ -42,7 +42,7 @@ func extractContextValue(ctx context.Context, k contextKey) {
 }
 
 /*
-Using [WithTimeout] function, we can create a context with a TTL, after that time the resource it will be close
+Using [WithTimeout] function, we can create a context with a TTL, after that time, the resource it will be close
 and clean, and the context channel [Done] it will be ready to be consumed. Then the context it will have
 the [Error] attribute.
 */
