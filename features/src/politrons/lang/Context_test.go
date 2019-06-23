@@ -73,7 +73,7 @@ func TestContextTimeoutReleasingGoRoutines(t *testing.T) {
 	case response := <-asyncFunc(ctx):
 		fmt.Printf("Response:%s \n", response)
 	case <-time.After(500 * time.Millisecond):
-		fmt.Println("Go routine took too long Timed out")
+		fmt.Println("Go routine took too long. Timed out")
 	}
 }
 
@@ -93,6 +93,7 @@ func asyncFunc(ctx context.Context) <-chan string {
 	}()
 	return channel
 }
+
 func random(min, max int) int {
 	rand.Seed(time.Now().Unix())
 	return rand.Intn(max-min) + min
@@ -122,6 +123,7 @@ func TestContextCancel(t *testing.T) {
 	}
 }
 
+//Specifying [<-] before a channel return definition it means the channel can only receive data, but not send.
 type returnChannel <-chan int
 
 func runAsyncProgram(ctx context.Context) returnChannel {
@@ -139,5 +141,38 @@ func runAsyncProgram(ctx context.Context) returnChannel {
 			}
 		}
 	}()
+	return channel
+}
+
+/*
+Using [WithDeadline] it's pretty much the same than Timeout, but instead use type Duration, you just use time.
+
+Here we use in the same context, just to have a deadline in the execution of a async thread process, in case the
+process exceed the deadline, the [Done] is invoked, and the whole process is stop and clean.
+
+CancelFunc is not mandatory to execute, but it always a good practice add the defer Cancel() to clean all context after the function
+ends.
+*/
+func TestContextDeadLine(t *testing.T) {
+	deadlineTime := time.Now().Add(500 * time.Millisecond)
+	ctx, cancel := context.WithDeadline(context.Background(), deadlineTime)
+	defer cancel()
+	channel := asyncWithDeadline(ctx)
+	select {
+	case response := <-channel:
+		fmt.Println(response)
+	case <-time.After(510 * time.Millisecond):
+		fmt.Println("Seems the async action did not finish on time")
+	}
+}
+
+func asyncWithDeadline(ctx context.Context) <-chan string {
+	channel := make(chan string)
+	select {
+	case <-time.After(time.Duration(random(0, 1000)) * time.Millisecond):
+		fmt.Println("Hello Async go with Deadline")
+	case <-ctx.Done():
+		fmt.Println(ctx.Err())
+	}
 	return channel
 }
