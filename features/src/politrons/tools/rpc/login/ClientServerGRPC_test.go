@@ -6,14 +6,12 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"net"
+	"strings"
 	"testing"
 )
 
-func TestServer(t *testing.T) {
-	createServer()
-}
-
-func TestClient(t *testing.T) {
+func TestCommunication(t *testing.T) {
+	go createServer()
 	createClient()
 }
 
@@ -25,7 +23,7 @@ func createClient() {
 	}
 	defer conn.Close()
 	c := NewPingClient(conn)
-	response, err := c.SayHello(context.Background(), &PingMessage{Greeting: "foo"})
+	response, err := c.SayHello(context.Background(), &PingMessage{Greeting: "Hello"})
 	if err != nil {
 		log.Fatalf("Error when calling SayHello: %s", err)
 	}
@@ -58,5 +56,5 @@ type Server struct {
 // SayHello generates response to a Ping request
 func (s *Server) SayHello(ctx context.Context, in *PingMessage) (*PingMessage, error) {
 	log.Printf("Receive message %s", in.Greeting)
-	return &PingMessage{Greeting: "bar"}, nil
+	return &PingMessage{Greeting: strings.ToUpper(in.Greeting + " politrons")}, nil
 }
