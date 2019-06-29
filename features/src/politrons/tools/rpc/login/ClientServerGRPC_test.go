@@ -26,35 +26,54 @@ func createClient() {
 	if err != nil {
 		log.Fatalf("Error when calling SayHello: %s", err)
 	}
-	log.Printf("Response User with info Name: %s", response.Name)
-	log.Printf("Response User with info Age: %s", response.Age)
-	log.Printf("Response User with info Sex: %s", response.Sex)
+	log.Printf("Response User with info:")
+	log.Printf("Name: %s", response.Name)
+	log.Printf("Age: %s", response.Age)
+	log.Printf("Sex: %s", response.Sex)
 }
 
-// main start a gRPC server and waits for connection
+/*
+Start a gRPC server following next steps.
+
+* Create a listener on TCP port 1981
+* Create a server instance
+* Create a gRPC server instance
+* Attach the Service to the server using the class generate with the proto file. Format[Register[service]Server]
+  Now all the communication from client that reach the ip/port of server it will be redirect to all extend methods,
+  of Server[Account]
+* Start the server using the [net.Listen] specifying the network protocol and port
+*/
 func createServer() {
-	// create a listener on TCP port 1981
+	listener := createServerListener()
+	server := Server{}
+	grpcServer := grpc.NewServer()
+	RegisterAccountServer(grpcServer, &server)
+	startServer(grpcServer, listener)
+}
+
+/*
+Using the instance of the Server and the listener we run the server and we control the error in
+the initialization.
+*/
+func startServer(grpcServer *grpc.Server, listener net.Listener) {
+	if err := grpcServer.Serve(listener); err != nil {
+		log.Fatalf("Error running server: %server", err)
+	}
+}
+
+func createServerListener() net.Listener {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 1981))
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		log.Fatalf("Error to listen: %v", err)
 	}
-	// create a server instance
-	server := Server{}
-	// create a gRPC server object
-	grpcServer := grpc.NewServer()
-	// attach the Ping service to the server
-	RegisterAccountServer(grpcServer, &server)
-	// start the server
-	if err := grpcServer.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %server", err)
-	}
+	return lis
 }
 
 // Server represents the gRPC server
 type Server struct {
 }
 
-// SayHello generates response to a Ping request
+// Implementation of the service [Account]
 func (s *Server) LoginUser(ctx context.Context, in *LoginMessage) (*UserMessage, error) {
 	log.Printf("Login with username %s", in.Username)
 	return &UserMessage{

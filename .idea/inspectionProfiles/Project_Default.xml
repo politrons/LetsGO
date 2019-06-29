@@ -16,6 +16,7 @@
         <method importPath="io" receiver="ReadCloser" name="Close" />
         <method importPath="github.com/segmentio/kafka-go" receiver="*Writer" name="Close" />
         <method importPath="github.com/segmentio/kafka-go" receiver="*Writer" name="WriteMessages" />
+        <method importPath="google.golang.org/grpc" receiver="*ClientConn" name="Close" />
       </methods>
     </inspection_tool>
   </profile>
