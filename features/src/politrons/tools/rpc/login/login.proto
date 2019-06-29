@@ -1,8 +1,21 @@
 syntax = "proto3";
 package login;
-message PingMessage {
-  string greeting = 1;
+
+//Request message that we will use for the login of the user
+message LoginMessage {
+    string username = 1;
+    string password =2;
 }
-service Ping {
-  rpc SayHello(PingMessage) returns (PingMessage) {}
+
+//The user type message that we will use to create the user in [CreateUser] function+
+//and the response with User information in LoginUser
+message UserMessage {
+    string name = 1;
+    string age = 2;
+    string sex = 3;
+}
+
+service Account {
+    rpc LoginUser (LoginMessage) returns (UserMessage) {
+    }
 }

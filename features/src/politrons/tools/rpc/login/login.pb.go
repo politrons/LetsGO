@@ -22,60 +22,131 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type PingMessage struct {
-	Greeting             string   `protobuf:"bytes,1,opt,name=greeting,proto3" json:"greeting,omitempty"`
+//Request message that we will use for the login of the user
+type LoginMessage struct {
+	Username             string   `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
+	Password             string   `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *PingMessage) Reset()         { *m = PingMessage{} }
-func (m *PingMessage) String() string { return proto.CompactTextString(m) }
-func (*PingMessage) ProtoMessage()    {}
-func (*PingMessage) Descriptor() ([]byte, []int) {
+func (m *LoginMessage) Reset()         { *m = LoginMessage{} }
+func (m *LoginMessage) String() string { return proto.CompactTextString(m) }
+func (*LoginMessage) ProtoMessage()    {}
+func (*LoginMessage) Descriptor() ([]byte, []int) {
 	return fileDescriptor_67c21677aa7f4e4f, []int{0}
 }
 
-func (m *PingMessage) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_PingMessage.Unmarshal(m, b)
+func (m *LoginMessage) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_LoginMessage.Unmarshal(m, b)
 }
-func (m *PingMessage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_PingMessage.Marshal(b, m, deterministic)
+func (m *LoginMessage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_LoginMessage.Marshal(b, m, deterministic)
 }
-func (m *PingMessage) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_PingMessage.Merge(m, src)
+func (m *LoginMessage) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LoginMessage.Merge(m, src)
 }
-func (m *PingMessage) XXX_Size() int {
-	return xxx_messageInfo_PingMessage.Size(m)
+func (m *LoginMessage) XXX_Size() int {
+	return xxx_messageInfo_LoginMessage.Size(m)
 }
-func (m *PingMessage) XXX_DiscardUnknown() {
-	xxx_messageInfo_PingMessage.DiscardUnknown(m)
+func (m *LoginMessage) XXX_DiscardUnknown() {
+	xxx_messageInfo_LoginMessage.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_PingMessage proto.InternalMessageInfo
+var xxx_messageInfo_LoginMessage proto.InternalMessageInfo
 
-func (m *PingMessage) GetGreeting() string {
+func (m *LoginMessage) GetUsername() string {
 	if m != nil {
-		return m.Greeting
+		return m.Username
+	}
+	return ""
+}
+
+func (m *LoginMessage) GetPassword() string {
+	if m != nil {
+		return m.Password
+	}
+	return ""
+}
+
+//The user type message that we will use to create the user in [CreateUser] function+
+//and the response with User information in LoginUser
+type UserMessage struct {
+	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Age                  string   `protobuf:"bytes,2,opt,name=age,proto3" json:"age,omitempty"`
+	Sex                  string   `protobuf:"bytes,3,opt,name=sex,proto3" json:"sex,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UserMessage) Reset()         { *m = UserMessage{} }
+func (m *UserMessage) String() string { return proto.CompactTextString(m) }
+func (*UserMessage) ProtoMessage()    {}
+func (*UserMessage) Descriptor() ([]byte, []int) {
+	return fileDescriptor_67c21677aa7f4e4f, []int{1}
+}
+
+func (m *UserMessage) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UserMessage.Unmarshal(m, b)
+}
+func (m *UserMessage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UserMessage.Marshal(b, m, deterministic)
+}
+func (m *UserMessage) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UserMessage.Merge(m, src)
+}
+func (m *UserMessage) XXX_Size() int {
+	return xxx_messageInfo_UserMessage.Size(m)
+}
+func (m *UserMessage) XXX_DiscardUnknown() {
+	xxx_messageInfo_UserMessage.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UserMessage proto.InternalMessageInfo
+
+func (m *UserMessage) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *UserMessage) GetAge() string {
+	if m != nil {
+		return m.Age
+	}
+	return ""
+}
+
+func (m *UserMessage) GetSex() string {
+	if m != nil {
+		return m.Sex
 	}
 	return ""
 }
 
 func init() {
-	proto.RegisterType((*PingMessage)(nil), "login.PingMessage")
+	proto.RegisterType((*LoginMessage)(nil), "login.LoginMessage")
+	proto.RegisterType((*UserMessage)(nil), "login.UserMessage")
 }
 
 func init() { proto.RegisterFile("login.proto", fileDescriptor_67c21677aa7f4e4f) }
 
 var fileDescriptor_67c21677aa7f4e4f = []byte{
-	// 112 bytes of a gzipped FileDescriptorProto
+	// 171 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0xce, 0xc9, 0x4f, 0xcf,
-	0xcc, 0xd3, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x05, 0x73, 0x94, 0x34, 0xb9, 0xb8, 0x03,
-	0x32, 0xf3, 0xd2, 0x7d, 0x53, 0x8b, 0x8b, 0x13, 0xd3, 0x53, 0x85, 0xa4, 0xb8, 0x38, 0xd2, 0x8b,
-	0x52, 0x53, 0x4b, 0x32, 0xf3, 0xd2, 0x25, 0x18, 0x15, 0x18, 0x35, 0x38, 0x83, 0xe0, 0x7c, 0x23,
-	0x1b, 0x2e, 0x16, 0x90, 0x52, 0x21, 0x13, 0x2e, 0x8e, 0xe0, 0xc4, 0x4a, 0x8f, 0xd4, 0x9c, 0x9c,
-	0x7c, 0x21, 0x21, 0x3d, 0x88, 0x99, 0x48, 0x66, 0x48, 0x61, 0x11, 0x53, 0x62, 0x48, 0x62, 0x03,
-	0x5b, 0x6b, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff, 0xc9, 0x47, 0x37, 0xf1, 0x85, 0x00, 0x00, 0x00,
+	0xcc, 0xd3, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x05, 0x73, 0x94, 0xdc, 0xb8, 0x78, 0x7c,
+	0x40, 0x0c, 0xdf, 0xd4, 0xe2, 0xe2, 0xc4, 0xf4, 0x54, 0x21, 0x29, 0x2e, 0x8e, 0xd2, 0xe2, 0xd4,
+	0xa2, 0xbc, 0xc4, 0xdc, 0x54, 0x09, 0x46, 0x05, 0x46, 0x0d, 0xce, 0x20, 0x38, 0x1f, 0x24, 0x57,
+	0x90, 0x58, 0x5c, 0x5c, 0x9e, 0x5f, 0x94, 0x22, 0xc1, 0x04, 0x91, 0x83, 0xf1, 0x95, 0x5c, 0xb9,
+	0xb8, 0x43, 0x8b, 0x53, 0x8b, 0x60, 0xc6, 0x08, 0x71, 0xb1, 0x20, 0x19, 0x01, 0x66, 0x0b, 0x09,
+	0x70, 0x31, 0x27, 0xa6, 0xa7, 0x42, 0x75, 0x82, 0x98, 0x20, 0x91, 0xe2, 0xd4, 0x0a, 0x09, 0x66,
+	0x88, 0x48, 0x71, 0x6a, 0x85, 0x91, 0x23, 0x17, 0xbb, 0x63, 0x72, 0x72, 0x7e, 0x69, 0x5e, 0x89,
+	0x90, 0x19, 0x17, 0x27, 0xd8, 0x65, 0x20, 0x63, 0x85, 0x84, 0xf5, 0x20, 0x6e, 0x47, 0x76, 0xab,
+	0x94, 0x10, 0x54, 0x10, 0xc9, 0x62, 0x25, 0x86, 0x24, 0x36, 0xb0, 0xff, 0x8c, 0x01, 0x01, 0x00,
+	0x00, 0xff, 0xff, 0xe6, 0x17, 0x0d, 0x35, 0xee, 0x00, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -86,64 +157,64 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// PingClient is the client API for Ping service.
+// AccountClient is the client API for Account service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type PingClient interface {
-	SayHello(ctx context.Context, in *PingMessage, opts ...grpc.CallOption) (*PingMessage, error)
+type AccountClient interface {
+	LoginUser(ctx context.Context, in *LoginMessage, opts ...grpc.CallOption) (*UserMessage, error)
 }
 
-type pingClient struct {
+type accountClient struct {
 	cc *grpc.ClientConn
 }
 
-func NewPingClient(cc *grpc.ClientConn) PingClient {
-	return &pingClient{cc}
+func NewAccountClient(cc *grpc.ClientConn) AccountClient {
+	return &accountClient{cc}
 }
 
-func (c *pingClient) SayHello(ctx context.Context, in *PingMessage, opts ...grpc.CallOption) (*PingMessage, error) {
-	out := new(PingMessage)
-	err := c.cc.Invoke(ctx, "/login.Ping/SayHello", in, out, opts...)
+func (c *accountClient) LoginUser(ctx context.Context, in *LoginMessage, opts ...grpc.CallOption) (*UserMessage, error) {
+	out := new(UserMessage)
+	err := c.cc.Invoke(ctx, "/login.Account/LoginUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// PingServer is the server API for Ping service.
-type PingServer interface {
-	SayHello(context.Context, *PingMessage) (*PingMessage, error)
+// AccountServer is the server API for Account service.
+type AccountServer interface {
+	LoginUser(context.Context, *LoginMessage) (*UserMessage, error)
 }
 
-func RegisterPingServer(s *grpc.Server, srv PingServer) {
-	s.RegisterService(&_Ping_serviceDesc, srv)
+func RegisterAccountServer(s *grpc.Server, srv AccountServer) {
+	s.RegisterService(&_Account_serviceDesc, srv)
 }
 
-func _Ping_SayHello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PingMessage)
+func _Account_LoginUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginMessage)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PingServer).SayHello(ctx, in)
+		return srv.(AccountServer).LoginUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/login.Ping/SayHello",
+		FullMethod: "/login.Account/LoginUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PingServer).SayHello(ctx, req.(*PingMessage))
+		return srv.(AccountServer).LoginUser(ctx, req.(*LoginMessage))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _Ping_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "login.Ping",
-	HandlerType: (*PingServer)(nil),
+var _Account_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "login.Account",
+	HandlerType: (*AccountServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SayHello",
-			Handler:    _Ping_SayHello_Handler,
+			MethodName: "LoginUser",
+			Handler:    _Account_LoginUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
