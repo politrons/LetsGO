@@ -15,6 +15,9 @@ message UserMessage {
     string sex = 3;
 }
 
+/*
+Service to be implemented by the server side, and which functions it will be exposed by the client to be invoked.
+*/
 service Account {
     rpc LoginUser (LoginMessage) returns (UserMessage) {
     }
