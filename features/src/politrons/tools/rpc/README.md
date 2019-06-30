@@ -18,7 +18,7 @@ Here `login` is the directory where you have the contract, and where you want to
 
 ### Account example
 
-Here you can see the generated code by `Protoc using the [proto file](login/login.proto) to link Client and Server.
+Here you can see the generated code by `Protoc` using the [proto file](login/login.proto) to link Client and Server.
 
 * **[Server-Messages](login/login.pb.go)**
 
