@@ -37,7 +37,7 @@ func createClient() {
 	loginMessage := &LoginMessage{Username: "politrons", Password: "12345"}
 	response, err := accountClient.LoginUser(context.Background(), loginMessage)
 	if err != nil {
-		log.Fatalf("Error when calling SayHello: %s", err)
+		log.Fatalf("Error in Login process: %s", err)
 	}
 	log.Printf("Response User with info:")
 	log.Printf("Name: %s", response.Name)
@@ -99,14 +99,36 @@ func startServer(grpcServer *grpc.Server, listener net.Listener) {
 
 // Server represents the gRPC server
 type Server struct {
+	users map[string]User
 }
 
-// Implementation of the service [Account]
-func (s *Server) LoginUser(ctx context.Context, in *LoginMessage) (*UserMessage, error) {
-	log.Printf("Login with username %s", in.Username)
-	return &UserMessage{
-		Name: "Pablo",
-		Age:  "38",
-		Sex:  "Male",
-	}, nil
+/*
+Implementation of the service [Account] in case the user does not exist in database we return the error
+*/
+func (server *Server) LoginUser(ctx context.Context, message *LoginMessage) (*UserMessage, error) {
+	user, ok := server.users[message.Username]
+	if ok {
+		log.Printf("Login with username %s", message.Username)
+		return &UserMessage{
+			Name: user.name,
+			Age:  user.age,
+			Sex:  user.sex,
+		}, nil
+	} else {
+		return nil, UserNotFound{fmt.Sprintf("User %s not found", message.Username)}
+	}
+}
+
+type User struct {
+	name string
+	age  string
+	sex  string
+}
+
+type UserNotFound struct {
+	Cause string
+}
+
+func (e UserNotFound) Error() string {
+	return e.Cause
 }
