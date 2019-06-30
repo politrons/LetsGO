@@ -64,9 +64,9 @@ func TestErrorTimeout(t *testing.T) {
 	loginClient()
 }
 
-//##########################//
-//		  gRPC CLIENT		//
-//##########################//
+//######################################//
+//		  gRPC CLIENT	            	//
+//#####################################//
 
 /*
 Run gRPC request against a server following the next steps:
