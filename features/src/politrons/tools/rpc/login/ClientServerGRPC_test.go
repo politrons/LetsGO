@@ -32,6 +32,18 @@ func TestErrorUserNotFound(t *testing.T) {
 	loginClient()
 }
 
+var timeout = false
+
+/*
+In this test we prove how the context with timeout works between client-server
+*/
+func TestErrorTimeout(t *testing.T) {
+	timeout = true
+	go createServer()
+	createUser()
+	loginClient()
+}
+
 /*
 Run gRPC request against a server following the next steps:
 
@@ -145,6 +157,9 @@ In this communication we receive a context from the client which specify the tim
 */
 func (server *Server) CreateUser(ctx context.Context, message *CreateUserMessage) (*UserMessage, error) {
 	log.Printf("Request to create user with username %s", message.Username)
+	if timeout {
+		time.Sleep(1 * time.Second)
+	}
 	select {
 	case <-ctx.Done():
 		fmt.Println(ctx.Err()) // prints "context deadline exceeded"
