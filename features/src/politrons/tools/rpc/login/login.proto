@@ -4,7 +4,7 @@ package login;
 //Request message that we will use for the login of the user
 message LoginMessage {
     string username = 1;
-    string password =2;
+    string password = 2;
 }
 
 //The user type message that we will use to create the user in [CreateUser] function+
@@ -16,9 +16,20 @@ message UserMessage {
 }
 
 /*
+Message type to cover the username and the UserMessage to create account of the user.
+*/
+message CreateUserMessage {
+    string username = 1;
+    UserMessage userMessage = 2;
+}
+
+/*
 Service to be implemented by the server side, and which functions it will be exposed by the client to be invoked.
 */
 service Account {
+    rpc CreateUser (CreateUserMessage) returns (UserMessage) {
+    }
+
     rpc LoginUser (LoginMessage) returns (UserMessage) {
     }
 }

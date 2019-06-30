@@ -1,5 +1,7 @@
 package login
 
+//To understand how the structure of the [Client] - [Server] works, take a look into [login.proto] file.
+
 import (
 	"fmt"
 	"golang.org/x/net/context"
@@ -12,10 +14,21 @@ import (
 /*
 Runner of the server and client. Since the server get block listening for communications,
 we run in another thread using go routines.
+In this test we run the server, we create the user in server and then we login.
 */
-func TestCommunication(t *testing.T) {
+func TestCreateUserAndLogin(t *testing.T) {
 	go createServer()
-	createClient()
+	createUser()
+	log.Println("*********************************************")
+	loginClient()
+}
+
+/*
+In this test we run the server, we try to login, and we receive an [UserNotFound] Error response.
+*/
+func TestErrorUserNotFound(t *testing.T) {
+	go createServer()
+	loginClient()
 }
 
 /*
@@ -28,7 +41,7 @@ Run gRPC request against a server following the next steps:
 * Make the gRPC call using the client previously created pointing to [LoginUser] which is the function defied in the service
   in the proto file.
 */
-func createClient() {
+func loginClient() {
 	conn, err := createConnection()
 	if conn != nil {
 		defer conn.Close()
@@ -39,7 +52,27 @@ func createClient() {
 	if err != nil {
 		log.Fatalf("Error in Login process: %s", err)
 	}
-	log.Printf("Response User with info:")
+	log.Printf("Response, User with info:")
+	log.Printf("Name: %s", response.Name)
+	log.Printf("Age: %s", response.Age)
+	log.Printf("Sex: %s", response.Sex)
+}
+
+/*
+Same steps than loginClient, but instead of invoke [LoginUser] with [LoginMessage] we invoke [CreateUser] with [CreateUserMessage]
+*/
+func createUser() {
+	conn, err := createConnection()
+	if conn != nil {
+		defer conn.Close()
+	}
+	accountClient := NewAccountClient(conn)
+	createUserMessage := &CreateUserMessage{Username: "politrons", UserMessage: &UserMessage{Name: "Paul", Age: "38", Sex: "Male"}}
+	response, err := accountClient.CreateUser(context.Background(), createUserMessage)
+	if err != nil {
+		log.Fatalf("Error in creation process: %s", err)
+	}
+	log.Printf("Response, User created with info:")
 	log.Printf("Name: %s", response.Name)
 	log.Printf("Age: %s", response.Age)
 	log.Printf("Sex: %s", response.Sex)
@@ -103,12 +136,25 @@ type Server struct {
 }
 
 /*
-Implementation of the service [Account] in case the user does not exist in database we return the error
+Implementation of the service [Account]-[CreateUser] defined in [login.proto] in case the user does not exist in database we return the error.
+*/
+func (server *Server) CreateUser(ctx context.Context, message *CreateUserMessage) (*UserMessage, error) {
+	log.Printf("Request to create user with username %s", message.Username)
+	if server.users == nil {
+		server.users = make(map[string]User)
+	}
+	user := User{message.UserMessage.Name, message.UserMessage.Age, message.UserMessage.Sex}
+	server.users[message.Username] = user
+	return message.UserMessage, nil
+}
+
+/*
+Implementation of the service [Account]-[LoginUser] defined in [login.proto] in case the user does not exist in database we return the error.
 */
 func (server *Server) LoginUser(ctx context.Context, message *LoginMessage) (*UserMessage, error) {
-	user, ok := server.users[message.Username]
-	if ok {
-		log.Printf("Login with username %s", message.Username)
+	user, found := server.users[message.Username]
+	if found {
+		log.Printf("Request to login user with username %s", message.Username)
 		return &UserMessage{
 			Name: user.name,
 			Age:  user.age,

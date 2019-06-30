@@ -127,15 +127,65 @@ func (m *UserMessage) GetSex() string {
 	return ""
 }
 
+//
+//Message type to cover the username and the UserMessage to create account of the user.
+type CreateUserMessage struct {
+	Username             string       `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
+	UserMessage          *UserMessage `protobuf:"bytes,2,opt,name=userMessage,proto3" json:"userMessage,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}     `json:"-"`
+	XXX_unrecognized     []byte       `json:"-"`
+	XXX_sizecache        int32        `json:"-"`
+}
+
+func (m *CreateUserMessage) Reset()         { *m = CreateUserMessage{} }
+func (m *CreateUserMessage) String() string { return proto.CompactTextString(m) }
+func (*CreateUserMessage) ProtoMessage()    {}
+func (*CreateUserMessage) Descriptor() ([]byte, []int) {
+	return fileDescriptor_67c21677aa7f4e4f, []int{2}
+}
+
+func (m *CreateUserMessage) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateUserMessage.Unmarshal(m, b)
+}
+func (m *CreateUserMessage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateUserMessage.Marshal(b, m, deterministic)
+}
+func (m *CreateUserMessage) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateUserMessage.Merge(m, src)
+}
+func (m *CreateUserMessage) XXX_Size() int {
+	return xxx_messageInfo_CreateUserMessage.Size(m)
+}
+func (m *CreateUserMessage) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateUserMessage.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateUserMessage proto.InternalMessageInfo
+
+func (m *CreateUserMessage) GetUsername() string {
+	if m != nil {
+		return m.Username
+	}
+	return ""
+}
+
+func (m *CreateUserMessage) GetUserMessage() *UserMessage {
+	if m != nil {
+		return m.UserMessage
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*LoginMessage)(nil), "login.LoginMessage")
 	proto.RegisterType((*UserMessage)(nil), "login.UserMessage")
+	proto.RegisterType((*CreateUserMessage)(nil), "login.CreateUserMessage")
 }
 
 func init() { proto.RegisterFile("login.proto", fileDescriptor_67c21677aa7f4e4f) }
 
 var fileDescriptor_67c21677aa7f4e4f = []byte{
-	// 171 bytes of a gzipped FileDescriptorProto
+	// 215 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0xce, 0xc9, 0x4f, 0xcf,
 	0xcc, 0xd3, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x05, 0x73, 0x94, 0xdc, 0xb8, 0x78, 0x7c,
 	0x40, 0x0c, 0xdf, 0xd4, 0xe2, 0xe2, 0xc4, 0xf4, 0x54, 0x21, 0x29, 0x2e, 0x8e, 0xd2, 0xe2, 0xd4,
@@ -143,10 +193,13 @@ var fileDescriptor_67c21677aa7f4e4f = []byte{
 	0x90, 0x58, 0x5c, 0x5c, 0x9e, 0x5f, 0x94, 0x22, 0xc1, 0x04, 0x91, 0x83, 0xf1, 0x95, 0x5c, 0xb9,
 	0xb8, 0x43, 0x8b, 0x53, 0x8b, 0x60, 0xc6, 0x08, 0x71, 0xb1, 0x20, 0x19, 0x01, 0x66, 0x0b, 0x09,
 	0x70, 0x31, 0x27, 0xa6, 0xa7, 0x42, 0x75, 0x82, 0x98, 0x20, 0x91, 0xe2, 0xd4, 0x0a, 0x09, 0x66,
-	0x88, 0x48, 0x71, 0x6a, 0x85, 0x91, 0x23, 0x17, 0xbb, 0x63, 0x72, 0x72, 0x7e, 0x69, 0x5e, 0x89,
-	0x90, 0x19, 0x17, 0x27, 0xd8, 0x65, 0x20, 0x63, 0x85, 0x84, 0xf5, 0x20, 0x6e, 0x47, 0x76, 0xab,
-	0x94, 0x10, 0x54, 0x10, 0xc9, 0x62, 0x25, 0x86, 0x24, 0x36, 0xb0, 0xff, 0x8c, 0x01, 0x01, 0x00,
-	0x00, 0xff, 0xff, 0xe6, 0x17, 0x0d, 0x35, 0xee, 0x00, 0x00, 0x00,
+	0x88, 0x48, 0x71, 0x6a, 0x85, 0x52, 0x2a, 0x97, 0xa0, 0x73, 0x51, 0x6a, 0x62, 0x49, 0x2a, 0xb2,
+	0x61, 0xf8, 0xdc, 0x64, 0xc2, 0xc5, 0x5d, 0x8a, 0x50, 0x0a, 0x36, 0x9c, 0xdb, 0x48, 0x48, 0x0f,
+	0xe2, 0x53, 0x24, 0x43, 0x82, 0x90, 0x95, 0x19, 0xd5, 0x73, 0xb1, 0x3b, 0x26, 0x27, 0xe7, 0x97,
+	0xe6, 0x95, 0x08, 0xd9, 0x70, 0x71, 0x21, 0x6c, 0x14, 0x92, 0x80, 0xea, 0xc4, 0x70, 0x84, 0x14,
+	0x16, 0x33, 0x95, 0x18, 0x84, 0xcc, 0xb8, 0x38, 0xc1, 0xc1, 0x07, 0xd6, 0x2c, 0x0c, 0x55, 0x82,
+	0x1c, 0xa0, 0xd8, 0xf5, 0x25, 0xb1, 0x81, 0x23, 0xc1, 0x18, 0x10, 0x00, 0x00, 0xff, 0xff, 0xbc,
+	0x0f, 0xe3, 0x79, 0x93, 0x01, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -161,6 +214,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type AccountClient interface {
+	CreateUser(ctx context.Context, in *CreateUserMessage, opts ...grpc.CallOption) (*UserMessage, error)
 	LoginUser(ctx context.Context, in *LoginMessage, opts ...grpc.CallOption) (*UserMessage, error)
 }
 
@@ -170,6 +224,15 @@ type accountClient struct {
 
 func NewAccountClient(cc *grpc.ClientConn) AccountClient {
 	return &accountClient{cc}
+}
+
+func (c *accountClient) CreateUser(ctx context.Context, in *CreateUserMessage, opts ...grpc.CallOption) (*UserMessage, error) {
+	out := new(UserMessage)
+	err := c.cc.Invoke(ctx, "/login.Account/CreateUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *accountClient) LoginUser(ctx context.Context, in *LoginMessage, opts ...grpc.CallOption) (*UserMessage, error) {
@@ -183,11 +246,30 @@ func (c *accountClient) LoginUser(ctx context.Context, in *LoginMessage, opts ..
 
 // AccountServer is the server API for Account service.
 type AccountServer interface {
+	CreateUser(context.Context, *CreateUserMessage) (*UserMessage, error)
 	LoginUser(context.Context, *LoginMessage) (*UserMessage, error)
 }
 
 func RegisterAccountServer(s *grpc.Server, srv AccountServer) {
 	s.RegisterService(&_Account_serviceDesc, srv)
+}
+
+func _Account_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUserMessage)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServer).CreateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/login.Account/CreateUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServer).CreateUser(ctx, req.(*CreateUserMessage))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Account_LoginUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -212,6 +294,10 @@ var _Account_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "login.Account",
 	HandlerType: (*AccountServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateUser",
+			Handler:    _Account_CreateUser_Handler,
+		},
 		{
 			MethodName: "LoginUser",
 			Handler:    _Account_LoginUser_Handler,
