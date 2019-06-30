@@ -9,6 +9,7 @@ import (
 	"log"
 	"net"
 	"testing"
+	"time"
 )
 
 /*
@@ -59,7 +60,9 @@ func loginClient() {
 }
 
 /*
-Same steps than loginClient, but instead of invoke [LoginUser] with [LoginMessage] we invoke [CreateUser] with [CreateUserMessage]
+Same steps than loginClient, but instead of invoke [LoginUser] with [LoginMessage] we invoke [CreateUser] with [CreateUserMessage].
+
+For this communication we create a context with timeout of 500ms where the server must return the response.
 */
 func createUser() {
 	conn, err := createConnection()
@@ -68,7 +71,8 @@ func createUser() {
 	}
 	accountClient := NewAccountClient(conn)
 	createUserMessage := &CreateUserMessage{Username: "politrons", UserMessage: &UserMessage{Name: "Paul", Age: "38", Sex: "Male"}}
-	response, err := accountClient.CreateUser(context.Background(), createUserMessage)
+	ctx, _ := context.WithTimeout(context.Background(), 500*time.Millisecond)
+	response, err := accountClient.CreateUser(ctx, createUserMessage)
 	if err != nil {
 		log.Fatalf("Error in creation process: %s", err)
 	}
@@ -137,15 +141,23 @@ type Server struct {
 
 /*
 Implementation of the service [Account]-[CreateUser] defined in [login.proto] in case the user does not exist in database we return the error.
+In this communication we receive a context from the client which specify the timeout before the server must return the call.
 */
 func (server *Server) CreateUser(ctx context.Context, message *CreateUserMessage) (*UserMessage, error) {
 	log.Printf("Request to create user with username %s", message.Username)
-	if server.users == nil {
-		server.users = make(map[string]User)
+	select {
+	case <-ctx.Done():
+		fmt.Println(ctx.Err()) // prints "context deadline exceeded"
+		return nil, ctx.Err()
+	default:
+		if server.users == nil {
+			server.users = make(map[string]User)
+		}
+		user := User{message.UserMessage.Name, message.UserMessage.Age, message.UserMessage.Sex}
+		server.users[message.Username] = user
+		return message.UserMessage, nil
 	}
-	user := User{message.UserMessage.Name, message.UserMessage.Age, message.UserMessage.Sex}
-	server.users[message.Username] = user
-	return message.UserMessage, nil
+
 }
 
 /*
