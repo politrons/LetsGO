@@ -65,7 +65,7 @@ func TestErrorTimeout(t *testing.T) {
 }
 
 //######################################//
-//		  gRPC CLIENT	            	//
+//		  gRPC CLIENT
 //#####################################//
 
 /*
@@ -130,9 +130,9 @@ func createConnection() (*grpc.ClientConn, error) {
 	return conn, err
 }
 
-//##########################//
-//		  gRPC SERVER		//
-//##########################//
+//######################################//
+//		  gRPC SERVER
+//#####################################//
 
 /*
 Start a gRPC server following next steps:
