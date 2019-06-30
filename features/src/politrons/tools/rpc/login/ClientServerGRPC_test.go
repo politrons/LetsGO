@@ -25,6 +25,26 @@ func TestCreateUserAndLogin(t *testing.T) {
 }
 
 /*
+In this test we do the same than previous test but async every operation making composition of channels
+*/
+func TestAsync(t *testing.T) {
+	channelCreate := make(chan bool)
+	channelLogin := make(chan bool)
+	go createServer()
+	go func(channelCreate chan bool) {
+		createUser()
+		channelCreate <- true
+	}(channelCreate)
+	go func(channelCreate chan bool, channelLogin chan bool) {
+		a := <-channelCreate
+		fmt.Printf("Create user finished %t \n", a)
+		loginClient()
+		channelLogin <- true
+	}(channelCreate, channelLogin)
+	fmt.Printf("Login finished %t \n", <-channelLogin)
+}
+
+/*
 In this test we run the server, we try to login, and we receive an [UserNotFound] Error response.
 */
 func TestErrorUserNotFound(t *testing.T) {
