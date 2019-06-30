@@ -1,6 +1,6 @@
 # ![My image](../../../../../img/grpc.png)  ![My image](../../../../../img/goGRPC.jpg)    
 
-### Create server and transport messages code
+### Create server and transport messages source
 
 Define your own [proto file](login/login.proto) where you define the transport messages and implementations of server.
 Having this file you will have a contract between Client-Server to be sure that communication between them remain unaltered.
