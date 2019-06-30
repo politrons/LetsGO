@@ -154,6 +154,8 @@ type Server struct {
 /*
 Implementation of the service [Account]-[CreateUser] defined in [login.proto] in case the user does not exist in database we return the error.
 In this communication we receive a context from the client which specify the timeout before the server must return the call.
+
+In this function to prove the timeout of the context, if the flag is true in a test we will sleep the process for a second.
 */
 func (server *Server) CreateUser(ctx context.Context, message *CreateUserMessage) (*UserMessage, error) {
 	log.Printf("Request to create user with username %s", message.Username)
