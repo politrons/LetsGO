@@ -4,6 +4,14 @@
 
 An example of how three services, can communicate between each other using `Rest` `gRPC` and `Kafka events`.
 
+The sources of the program:
+
+* **[Rest](src/rest)**
+* **[Kafka](src/kafka)**
+* **[gRPC](src/gRPC)**
+
+The runner class [here](src/CommunicationRunner_test.go)
+
 The flow of the program
 ````
 Client ---> [REST request] ---> [KAKA PUBLISHER] ---> [KAFKA CONSUMER] ---> [gRPC CLIENT]
@@ -11,7 +19,7 @@ Client ---> [REST request] ---> [KAKA PUBLISHER] ---> [KAFKA CONSUMER] ---> [gRP
        ---> [gRPC SERVER]  ---> [KAKA PUBLISHER] ---> [KAFKA CONSUMER] ---> [REST response] ---> Client
 ````
 
-The client make a request into:
+If the client make an Http request into:
 
 ```
 http://localhost:4000//communication/restKafkaGRPC/
