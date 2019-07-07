@@ -13,7 +13,9 @@ import (
 )
 
 /*
-Kafka subscriber that once we receive the message
+Kafka subscriber that once we receive the message, we apply the function received by the invoker of the subscription.
+The implementation of this [Kafka] Consumer it's meant to be used just for a specific [topic] with an action [function]
+to apply once we receive an event.
 */
 func SubscribeConsumer(broker Broker, topic Topic, fn func(str string)) {
 	consumer, _ := createConsumer(broker.Value, topic.Value)
