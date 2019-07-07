@@ -42,6 +42,11 @@ func startServer(grpcServer *grpc.Server, listener net.Listener) {
 type Server struct {
 }
 
+/*
+We receive the message from the client and we just attach an extra text in the message and return to the client.
+
+If you want to understand how works all the pieces of a gRPC server go to the section [gRPC] of this project
+*/
 func (server *Server) ProcessMessage(ctx context.Context, userMessage *UserMessage) (*UserMessage, error) {
 	updatedMessage := userMessage.Message + " and gRPC server"
 	fmt.Printf("gRPC Server:%s \n", updatedMessage)

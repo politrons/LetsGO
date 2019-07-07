@@ -9,8 +9,11 @@ import (
 )
 
 /*
-Function to make a request into gRPC server, and with the result we publish into another topic,
-which it will consume by the rest server which is subscribed.
+Function to make a request into [gRPC] server, and with the result we publish into another [Kafka] topic,
+which it will consume by the [rest] server which is subscribed.
+
+If you want to understand how works all the pieces of a gRPC client go to the section gRPC of this project
+
 */
 func MakeGRPCRequest(message string) {
 	updatedMessage := message + " and gRPC client"

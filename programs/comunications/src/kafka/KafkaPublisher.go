@@ -13,7 +13,7 @@ import (
 
 /*
 In the publisher we create a context with timeout, to make the goroutine that send the event close in 5 seconds
-if is not able to finish the process
+if is not able to finish the process.
 */
 func PublishEvents(broker Broker, topic Topic, key string, event string) {
 	updatedEvent := event + " and Kafka publisher"
