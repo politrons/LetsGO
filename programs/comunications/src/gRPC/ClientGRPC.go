@@ -8,7 +8,8 @@ import (
 )
 
 /*
-Function to make a request into gRPC server and print the final result
+Function to make a request into gRPC server, and with the result we publish into another topic,
+which it will consume by the rest server which is subscribed..
 */
 func MakeGRPCRequest(message string) {
 	updatedMessage := message + " and gRPC client"
