@@ -30,25 +30,28 @@ Once the event has been processed by another two services(Kafka, gRPC) we subscr
 we receive the final message.
 */
 func processRequest(response http.ResponseWriter, request *http.Request) {
+	message := "hello world from rest"
+	log.Printf("REST request: %s \n", message)
 	broker := Broker{Value: "localhost:9092"}
 	publishTopic := Topic{Value: "CommunicationTopic"}
 	consumeTopic := Topic{Value: "CommunicationRestTopic"}
 
 	channel := make(chan string)
 	go SubscribeConsumer(broker, consumeTopic, func(str string) {
+		log.Printf("REST response: %s \n", str)
 		channel <- strings.ToUpper(str)
 	})
-	time.Sleep(1 * time.Second) //Time enough to subscribe
+	time.Sleep(5 * time.Second) //Time enough to subscribe
 	PublishEvents(
 		broker,
 		publishTopic,
-		"myKey", "hello world from rest")
+		"myKey", message)
 
 	messageResponse := <-channel
-	log.Printf("#####################################")
+	log.Printf("############################################################################################")
 	log.Printf("End of transaction with Message:")
 	log.Printf("%s", messageResponse)
-	log.Printf("#####################################")
+	log.Printf("############################################################################################")
 	writeResponse(response, messageResponse)
 }
 
