@@ -1,6 +1,6 @@
 #  ![My image](../../img/REST.png)  ![My image](../../img/kafkalogo.jpg) ![My image](../../img/grpc.png)   
 
-### Communications
+# Communications
 
 An example of how three services, can communicate between each other using `Rest` `gRPC` and `Kafka events`.
 
