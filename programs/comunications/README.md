@@ -2,7 +2,7 @@
 
 # Communications
 
-An example of how three services, can communicate between each other using `Rest` `gRPC` and `Kafka events`.
+An example of how three services, can communicate between each other using `Rest` `gRPC` and `Kafka`.
 
 The sources of the program:
 
