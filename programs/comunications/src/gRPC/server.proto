@@ -1,0 +1,21 @@
+syntax = "proto3";
+package gRPC; //You can specify in which package you wand the auto generated code.
+
+
+//The user type message that we will use to create the user in [CreateUser] function+
+//and the response with User information in LoginUser
+message UserMessage {
+    string message = 1;
+}
+
+
+
+/*
+Service to be implemented by the server side, and which functions it will be exposed to the client to be invoked.
+*/
+
+
+service MessageManagement {
+    rpc ProcessMessage (UserMessage) returns (UserMessage) {}
+
+}
