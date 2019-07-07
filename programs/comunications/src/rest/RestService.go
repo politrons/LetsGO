@@ -3,6 +3,7 @@ package rest
 import (
 	"encoding/json"
 	"fmt"
+	"golang.org/x/net/context"
 	. "kafka"
 	"log"
 	"net/http"
@@ -29,8 +30,12 @@ func HttpServer() {
 Function to receive  a rest call, publish to Kafka the message received and subscribe into Kafka to receive the response.
 Once the event has been processed by another two services(Kafka, gRPC) we subscribe into a new [Kafka] topic where
 we receive the final message.
+
+We use context to set the timeout of the request in 5 seconds.
 */
 func processRequest(response http.ResponseWriter, request *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	message := "hello world from rest"
 	fmt.Printf("REST request: %s \n", message)
 	broker := Broker{Value: "localhost:9092"}
@@ -48,12 +53,17 @@ func processRequest(response http.ResponseWriter, request *http.Request) {
 		publishTopic,
 		"myKey", message)
 
-	messageResponse := <-channel
-	fmt.Printf("############################################################################################")
-	fmt.Printf("End of transaction with Message:")
-	fmt.Printf("%s", messageResponse)
-	fmt.Printf("############################################################################################")
-	writeResponse(response, messageResponse)
+	select {
+	case messageResponse := <-channel:
+		fmt.Printf("############################################################################################")
+		fmt.Printf("End of transaction with Message:")
+		fmt.Printf("%s", messageResponse)
+		fmt.Printf("############################################################################################")
+		writeResponse(response, messageResponse)
+	case <-ctx.Done():
+		writeResponse(response, "Error:Timeout request")
+	}
+
 }
 
 /*
