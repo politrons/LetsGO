@@ -15,7 +15,7 @@ completely generic for other topics and actions
 func RunKafkaServer() {
 	topic := "CommunicationTopic"
 	broker := "localhost:9092"
-	fmt.Printf("Subscribing to Kafka broker %s and topic:%s \n", broker, topic)
+	fmt.Printf("Running Kafka service, Subscribing to broker %s and topic:%s \n", broker, topic)
 	SubscribeConsumer(
 		Broker{Value: broker},
 		Topic{Value: topic}, func(str string) {

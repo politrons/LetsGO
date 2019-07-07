@@ -2,6 +2,7 @@ package gRPC
 
 import (
 	"context"
+	"fmt"
 	"google.golang.org/grpc"
 	. "kafka"
 	"log"
@@ -9,11 +10,11 @@ import (
 
 /*
 Function to make a request into gRPC server, and with the result we publish into another topic,
-which it will consume by the rest server which is subscribed..
+which it will consume by the rest server which is subscribed.
 */
 func MakeGRPCRequest(message string) {
 	updatedMessage := message + " and gRPC client"
-	log.Printf("gRPC Client:%s \n", updatedMessage)
+	fmt.Printf("gRPC Client:%s \n", updatedMessage)
 	conn, err := createConnection()
 	if conn != nil {
 		defer conn.Close()

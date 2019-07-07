@@ -1,7 +1,7 @@
 package kafka
 
 import (
-	"log"
+	"fmt"
 )
 
 /*
@@ -21,7 +21,7 @@ func SubscribeConsumer(broker Broker, topic Topic, fn func(str string)) {
 		switch consumerMessage.Topic {
 		case topic.Value:
 			updatedEvent := string(consumerMessage.Value) + " and Kafka consumer"
-			log.Printf("KAFKA Consumer: %s \n", updatedEvent)
+			fmt.Printf("KAFKA Consumer: %s \n", updatedEvent)
 			fn(updatedEvent)
 			break
 		default:

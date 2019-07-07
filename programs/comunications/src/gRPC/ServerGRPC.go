@@ -44,7 +44,7 @@ type Server struct {
 
 func (server *Server) ProcessMessage(ctx context.Context, userMessage *UserMessage) (*UserMessage, error) {
 	updatedMessage := userMessage.Message + " and gRPC server"
-	log.Printf("gRPC Server:%s \n", updatedMessage)
+	fmt.Printf("gRPC Server:%s \n", updatedMessage)
 	message := &UserMessage{Message: updatedMessage}
 	return message, nil
 }

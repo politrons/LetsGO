@@ -6,8 +6,8 @@ Example implemented in top of [cluster "github.com/bsm/sarama-cluster"] and ["gi
 */
 import (
 	"context"
+	"fmt"
 	"github.com/segmentio/kafka-go"
-	"log"
 	"time"
 )
 
@@ -17,7 +17,7 @@ if is not able to finish the process
 */
 func PublishEvents(broker Broker, topic Topic, key string, event string) {
 	updatedEvent := event + " and Kafka publisher"
-	log.Printf("KAFKA Publisher: %s \n", updatedEvent)
+	fmt.Printf("KAFKA Publisher: %s \n", updatedEvent)
 	ctx, _ := context.WithTimeout(context.Background(), time.Duration(5*time.Second))
 	err := createPublisherWriter(broker.Value, topic.Value).WriteMessages(ctx,
 		kafka.Message{

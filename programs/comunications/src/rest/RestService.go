@@ -2,6 +2,7 @@ package rest
 
 import (
 	"encoding/json"
+	"fmt"
 	. "kafka"
 	"log"
 	"net/http"
@@ -31,27 +32,27 @@ we receive the final message.
 */
 func processRequest(response http.ResponseWriter, request *http.Request) {
 	message := "hello world from rest"
-	log.Printf("REST request: %s \n", message)
+	fmt.Printf("REST request: %s \n", message)
 	broker := Broker{Value: "localhost:9092"}
 	publishTopic := Topic{Value: "CommunicationTopic"}
 	consumeTopic := Topic{Value: "CommunicationRestTopic"}
 
 	channel := make(chan string)
 	go SubscribeConsumer(broker, consumeTopic, func(str string) {
-		log.Printf("REST response: %s \n", str)
+		fmt.Printf("REST response: %s \n", str)
 		channel <- strings.ToUpper(str)
 	})
-	time.Sleep(5 * time.Second) //Time enough to subscribe
+	time.Sleep(1 * time.Second) //Time enough to subscribe and avoid RC(better improve with channels)
 	PublishEvents(
 		broker,
 		publishTopic,
 		"myKey", message)
 
 	messageResponse := <-channel
-	log.Printf("############################################################################################")
-	log.Printf("End of transaction with Message:")
-	log.Printf("%s", messageResponse)
-	log.Printf("############################################################################################")
+	fmt.Printf("############################################################################################")
+	fmt.Printf("End of transaction with Message:")
+	fmt.Printf("%s", messageResponse)
+	fmt.Printf("############################################################################################")
 	writeResponse(response, messageResponse)
 }
 
