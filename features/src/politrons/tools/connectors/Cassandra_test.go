@@ -23,12 +23,39 @@ type User struct {
 	sex  Sex
 }
 
+type ResponseUsers struct {
+	users []User
+	error error
+}
+
+type ResponseUser struct {
+	user  User
+	error error
+}
+
 func TestCassandra(t *testing.T) {
 	session := createCassandraSession()
 	defer session.Close()
+
 	insertQuery(session)
-	selectQuery(session, User{}, "Politrons")
-	selectAllQuery(session, User{})
+
+	selectChannel := make(chan ResponseUser)
+	selectQuery(session, User{}, "Politrons", selectChannel)
+	responseUser := <-selectChannel
+	if responseUser.error != nil {
+		log.Fatal(responseUser.error, nil)
+	}
+	fmt.Println("Full User:", responseUser.user.id, responseUser.user.name, responseUser.user.age, responseUser.user.sex)
+
+	selectAllChannel := make(chan ResponseUsers)
+	selectAllQuery(session, User{}, selectAllChannel)
+	responseUsers := <-selectAllChannel
+	if responseUser.error != nil {
+		log.Fatal(responseUsers.error, nil)
+	}
+	for _, user := range responseUsers.users {
+		fmt.Println("User:", user.id, user.name, user.age, user.sex)
+	}
 }
 
 /*
@@ -53,15 +80,19 @@ followed by a number of [interface{}] which are the filter arguments in this cas
 We can specify in the query the Consistency level. In this case One it's ok since this is a pet project.
 Then we use the extended method of Query [Scan()] passing to the method the argument we want to bind with the query result, in the specific order.
 In case there's a problem we receive an Error, otherwise it can be consider the command was correct and it was inserted
+
+In order to make this whole transaction async, we use go routines and channels. To get further details go to the concurrency section of this project.
 */
-func selectQuery(session *gocql.Session, user User, filterValue string) {
-	err := session.Query(`SELECT * FROM demodb.user WHERE name = ? LIMIT 1 ALLOW FILTERING`, filterValue).
-		Consistency(gocql.One).
-		Scan(&user.id, &user.name.value, &user.age.value, &user.sex.value)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("Full User:", user.id, user.name, user.age, user.sex)
+func selectQuery(session *gocql.Session, user User, filterValue string, channel chan ResponseUser) {
+	go func() {
+		err := session.Query(`SELECT * FROM demodb.user WHERE name = ? LIMIT 1 ALLOW FILTERING`, filterValue).
+			Consistency(gocql.One).
+			Scan(&user.id, &user.name.value, &user.age.value, &user.sex.value)
+		if err != nil {
+			channel <- ResponseUser{User{}, err}
+		}
+		channel <- ResponseUser{User{user.id, Name{user.name.value}, Age{user.age.value}, Sex{user.sex.value}}, nil}
+	}()
 }
 
 /*
@@ -70,15 +101,23 @@ When we want to SELECT all queries, we use same session and Query described befo
 capable of iterating over all results.
 
 Now for every iteration we use operator [Scan()] which bond the column of the query with the variables that we specify
+
+In order to make this whole transaction async, we use go routines and channels. To get further details go to the concurrency section of this project.
 */
-func selectAllQuery(session *gocql.Session, user User) {
-	iter := session.Query(`SELECT id, name FROM demodb.user`).Iter()
-	for iter.Scan(&user.id, &user.name.value) {
-		fmt.Println("User:", user.id, user.name.value)
-	}
-	if err := iter.Close(); err != nil {
-		log.Fatal(err)
-	}
+func selectAllQuery(session *gocql.Session, user User, selectAllChannel chan ResponseUsers) {
+	go func() {
+		users := []User{}
+		iter := session.Query(`SELECT id, name FROM demodb.user`).Iter()
+		for iter.Scan(&user.id, &user.name.value) {
+			user := User{user.id, Name{user.name.value}, Age{}, Sex{}}
+			users = append(users, user)
+		}
+		if err := iter.Close(); err != nil {
+			selectAllChannel <- ResponseUsers{nil, err}
+		}
+		selectAllChannel <- ResponseUsers{users, nil}
+
+	}()
 }
 
 /*
