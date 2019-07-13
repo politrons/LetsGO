@@ -38,6 +38,9 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 * **[Kafka](features/src/politrons/tools/kafka/KafkaConsumer_test.go)**
 * **[gRPC](features/src/politrons/tools/rpc/README.md)**
 
+### Connectors
+* **[Cassandra](features/src/politrons/tools/connectors/Cassandra_test.go)**
+
 ### Programs
 ![My image](img/programs.jpg)    
 
