@@ -1,4 +1,4 @@
-package kafka
+package connectors
 
 /*
 I have seen far by standing on the shoulders of giants.
