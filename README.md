@@ -39,6 +39,7 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 
 ### Connectors
 ![My image](img/connector.png)    
+* **[Rest](features/src/politrons/tools/connectors/HttpClient_test.go)**
 * **[Cassandra](features/src/politrons/tools/connectors/Cassandra_test.go)**
 * **[Kafka](features/src/politrons/tools/connectors/Kafka_test.go)**
 
