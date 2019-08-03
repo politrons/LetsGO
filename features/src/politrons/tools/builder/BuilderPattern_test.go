@@ -10,7 +10,7 @@ Builder pattern works just like in any other language with a good Strong type sy
 The idea is to make a chain of types where you can only create a new type if you're coming
 from a previous specific one, providing an order chain to go further.
 
-Finally when we have all the component that our instance needs, we provide the Build
+Finally when we have all the component that our instance needs, we provide the WithTLs
 function which return the [Server] instance with all the attributes that we need.
 */
 func TestBuilderPattern(t *testing.T) {
@@ -18,27 +18,30 @@ func TestBuilderPattern(t *testing.T) {
 		WithHost("0.0.0.0").
 		WithPort("1981").
 		WithEndpoints([]string{"/politrons/foo", "/politrons/bla"}).
-		Build(false)
+		WithTLs(false).
+		Build()
+
 	fmt.Println(server)
 }
 
 type ServerFactory struct {
-	Host ServerWithHost
+	server Server
 }
 
 type ServerWithHost struct {
-	Host string
+	server Server
 }
 
 type ServerWithPort struct {
-	Host string
-	Port string
+	server Server
 }
 
 type ServerWithEndpoints struct {
-	Host      string
-	Port      string
-	Endpoints []string
+	server Server
+}
+
+type ServerWithTls struct {
+	server Server
 }
 
 type Server struct {
@@ -48,18 +51,26 @@ type Server struct {
 	Tls       bool
 }
 
-func (srv ServerFactory) WithHost(host string) ServerWithHost {
-	return ServerWithHost{host}
+func (_ ServerFactory) WithHost(host string) ServerWithHost {
+	server := Server{host, "", nil, false}
+	return ServerWithHost{server}
 }
 
 func (srv ServerWithHost) WithPort(port string) ServerWithPort {
-	return ServerWithPort{Host: srv.Host, Port: port}
+	server := Server{srv.server.Host, port, nil, false}
+	return ServerWithPort{server}
 }
 
 func (srv ServerWithPort) WithEndpoints(endpoints []string) ServerWithEndpoints {
-	return ServerWithEndpoints{Host: srv.Host, Port: srv.Port, Endpoints: endpoints}
+	server := Server{srv.server.Host, srv.server.Port, endpoints, false}
+	return ServerWithEndpoints{server}
 }
 
-func (srv ServerWithEndpoints) Build(tls bool) Server {
-	return Server{Host: srv.Host, Port: srv.Port, Endpoints: srv.Endpoints, Tls: tls}
+func (srv ServerWithEndpoints) WithTLs(tls bool) ServerWithTls {
+	server := Server{srv.server.Host, srv.server.Port, srv.server.Endpoints, tls}
+	return ServerWithTls{server}
+}
+
+func (srv ServerWithTls) Build() Server {
+	return Server{srv.server.Host, srv.server.Port, srv.server.Endpoints, srv.server.Tls}
 }
