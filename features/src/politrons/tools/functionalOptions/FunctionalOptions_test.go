@@ -1,6 +1,9 @@
 package functionalOptions
 
-//https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis
+/**
+I have seen far by standing on the shoulders of giants.
+Example implemented thanks to blog https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis
+*/
 import (
 	"fmt"
 	"testing"
