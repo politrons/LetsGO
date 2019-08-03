@@ -9,9 +9,9 @@ import (
 	"testing"
 )
 
-//######################//
+//###########################//
 //	FUNCTIONAL OPTIONS  //
-//######################//
+//###########################//
 
 /**
 The idea behind this pattern is basically allow the client to have just one function for creation of a instance
