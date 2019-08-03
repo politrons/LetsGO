@@ -32,6 +32,7 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 ### Tools
 ![My image](img/pattern.png)    
 * **[Dependency Injection & DDD](features/src/politrons/tools/DI)**
+* **[Functional options](features/src/politrons/tools/functionalOptions/FunctionalOptions_test.go)**
 * **[Pattern matching](features/src/politrons/tools/patternMatching/PatternMatching_test.go)**
 * **[Strategy](features/src/politrons/tools/Strategy_test.go)**
 * **[Circuit breaker](features/src/politrons/tools/failFast/CircuitBreaker_test.go)**

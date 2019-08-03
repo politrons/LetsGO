@@ -1,10 +1,19 @@
 package functionalOptions
 
+//https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis
 import (
 	"fmt"
 	"testing"
 )
 
+//######################//
+//	FUNCTIONAL OPTIONS  //
+//######################//
+
+/**
+In this example since the functional options patter allow 0 to N arguments we can create the server
+using [CreateServer] without have to specify any configuration.
+*/
 func TestOptionalFuncNoArguments(t *testing.T) {
 	server, err := ServerConfig{}.CreateServer()
 	if err != nil {
@@ -20,7 +29,10 @@ put all of them mandatory and then force to pass nulls? yikes!.
 What about use optional function pattern, that as the name already explain is just pass multiple functions 0 to N
 which contains as entry argument the server itself, and each function know how to configure the server instance.
 
-For this example
+For this example, we create three functions that internally configure the ServerConfig type, to configure
+the instance.
+Then we pass this three functions to the function [CreateServer] which internally invoke all of them passing
+the type class instance configured as extended method.
 */
 func TestOptionalFuncWithArguments(t *testing.T) {
 	configHostAndPortFunc := func(server ServerConfig) ServerConfig {
@@ -46,7 +58,8 @@ func TestOptionalFuncWithArguments(t *testing.T) {
 	fmt.Println(server.ToString())
 }
 
-// Types
+//   Types
+//------------
 
 //Some optional types needed to configure the server
 type Host struct{ value string }
@@ -64,6 +77,9 @@ type ServerConfig struct {
 	Endpoints []Endpoint
 	Tls       Tls
 }
+
+//   Contract & Implementation
+//------------------------------
 
 /**
 Interface to declare the contract of how the Server must be created, and the type that must return.
@@ -87,6 +103,7 @@ func (srcConf ServerConfig) CreateServer(options ...func(ServerConfig) ServerCon
 	return newSrvConf, nil
 }
 
+//Util function to return a tuple of all elements of the Server
 func (srcConf ServerConfig) ToString() (Host, Port, []Endpoint, Tls) {
 	return srcConf.Host, srcConf.Port, srcConf.Endpoints, srcConf.Tls
 }
