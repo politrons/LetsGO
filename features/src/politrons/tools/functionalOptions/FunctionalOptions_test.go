@@ -14,6 +14,17 @@ import (
 //######################//
 
 /**
+The idea behind this pattern is basically allow the client to have just one function for creation of a instance
+where that instance must have multiple combination of optional attributes.
+
+To avoid have to create multiple functions per combinations or even worst force to pass nil elements as arguments
+we apply this patter.
+
+Basically the patter allow 0 to N functions as arguments where each function receive as argument the instance to
+be transformed with the specific configuration that only the function know.
+*/
+
+/**
 In this example since the functional options patter allow 0 to N arguments we can create the server
 using [CreateServer] without have to specify any configuration.
 */
