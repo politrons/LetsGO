@@ -100,6 +100,7 @@ func (srcConf ServerConfig) CreateServer(options ...func(ServerConfig) ServerCon
 	for _, opt := range options {
 		newSrvConf = opt(newSrvConf) //Here we apply the function passing the server
 	}
+	//We return always error nil, but you should expect a more realistic Server creation with side-effects in real world
 	return newSrvConf, nil
 }
 
