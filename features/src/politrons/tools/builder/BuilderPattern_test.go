@@ -14,8 +14,8 @@ Builder pattern works just like in any other language with a good Strong type sy
 The idea is to make a chain of types where you can only create a new type if you're coming
 from a previous specific one, providing an order chain to go further.
 
-Finally when we have all the component that our instance needs, we provide the WithTLs
-function which return the [Server] instance with all the attributes that we need.
+Finally when we have all the component that our instance needs, we provide the [Build]
+function which return the [Server] instance with all the attributes we need.
 */
 func TestBuilderPattern(t *testing.T) {
 	server := ServerFactory{}.
