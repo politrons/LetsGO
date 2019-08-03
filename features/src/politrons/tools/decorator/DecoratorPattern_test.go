@@ -45,7 +45,6 @@ This function wrap the guitar into a new type ElectricGuitar decorator
 */
 func CreateElectricGuitar(guitar Guitar) ElectricGuitar {
 	return ElectricGuitar{guitar}
-
 }
 
 //Implementation of the [AcousticGuitar] just extract the sound from the guitar
