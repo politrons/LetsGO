@@ -29,20 +29,21 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 * **[Either](features/src/politrons/monads/Either.go)**
 * **[Future](features/src/politrons/monads/Future.go)**
 
-### Tools
+### Patterns
 ![My image](img/pattern.png)    
 * **[Dependency Injection & DDD](features/src/politrons/tools/DI)**
 * **[Functional options](features/src/politrons/tools/functionalOptions/FunctionalOptions_test.go)**
+* **[Builder pattern](features/src/politrons/tools/builder/BuilderPattern_test.go)**
 * **[Pattern matching](features/src/politrons/tools/patternMatching/PatternMatching_test.go)**
 * **[Strategy](features/src/politrons/tools/Strategy_test.go)**
 * **[Circuit breaker](features/src/politrons/tools/failFast/CircuitBreaker_test.go)**
-* **[gRPC](features/src/politrons/tools/rpc/README.md)**
 
 ### Connectors
 ![My image](img/connector.png)    
 * **[Rest](features/src/politrons/tools/connectors/HttpClient_test.go)**
 * **[Cassandra](features/src/politrons/tools/connectors/Cassandra_test.go)**
 * **[Kafka](features/src/politrons/tools/connectors/Kafka_test.go)**
+* **[gRPC](features/src/politrons/tools/rpc/README.md)**
 
 ### Programs
 ![My image](img/programs.jpg)    
