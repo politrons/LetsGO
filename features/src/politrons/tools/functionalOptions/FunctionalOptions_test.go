@@ -22,6 +22,8 @@ we apply this patter.
 
 Basically the patter allow 0 to N functions as arguments where each function receive as argument the instance to
 be transformed with the specific configuration that only the function know.
+To avoid too much procedural code I avoid the use of pointers and each function it will return the value instance
+to try to be immutable.
 */
 
 /**
