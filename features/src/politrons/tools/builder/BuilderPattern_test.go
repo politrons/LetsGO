@@ -18,7 +18,7 @@ Finally when we have all the component that our instance needs, we provide the [
 function which return the [Server] instance with all the attributes we need.
 */
 func TestBuilderPattern(t *testing.T) {
-	server := ServerFactory{}.
+	server := new(ServerFactory).
 		WithHost("0.0.0.0").
 		WithPort("1981").
 		WithEndpoints([]string{"/politrons/foo", "/politrons/bla"}).

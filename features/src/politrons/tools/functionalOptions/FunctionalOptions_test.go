@@ -31,7 +31,7 @@ In this example since the functional options patter allow 0 to N arguments we ca
 using [CreateServer] without have to specify any configuration.
 */
 func TestOptionalFuncNoArguments(t *testing.T) {
-	server, err := ServerConfig{}.CreateServer()
+	server, err := new(ServerConfig).CreateServer()
 	if err != nil {
 		panic("Error creating server")
 	}
@@ -67,7 +67,7 @@ func TestOptionalFuncWithArguments(t *testing.T) {
 		return server
 	}
 
-	server, err := ServerConfig{}.CreateServer(configHostAndPortFunc, configEndpointFunc, configTlsFunc)
+	server, err := new(ServerConfig).CreateServer(configHostAndPortFunc, configEndpointFunc, configTlsFunc)
 	if err != nil {
 		panic("Error creating server")
 	}
