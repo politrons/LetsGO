@@ -35,6 +35,7 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 * **[Functional options](features/src/politrons/tools/functionalOptions/FunctionalOptions_test.go)**
 * **[Builder pattern](features/src/politrons/tools/builder/BuilderPattern_test.go)**
 * **[Decorator pattern](features/src/politrons/tools/decorator/DecoratorPattern_test.go)**
+* **[Observer pattern](features/src/politrons/tools/observer/ObserverPattern_test.go)**
 * **[Pattern matching](features/src/politrons/tools/patternMatching/PatternMatching_test.go)**
 * **[Strategy](features/src/politrons/tools/Strategy_test.go)**
 * **[Circuit breaker](features/src/politrons/tools/failFast/CircuitBreaker_test.go)**
