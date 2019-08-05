@@ -89,10 +89,17 @@ type NoMoreEvents struct {
 //	PUBLISHER   //
 //#################//
 
+//Simple async function that write the received event into the channel
 func (publisher Publisher) appendEvent(event Event) {
 	go func() { publisher.channel <- event }()
 }
 
+/*
+This function is invoked by the observable when he can process new messages.
+It will try to read from the channel using [for] we create this infinite loop and using [select]
+We're able to subscribe to the channel waiting for the element, and also we define a max wait time [2000]
+where after that we return the error that no more events on channel found.
+*/
 func (publisher Publisher) getNext(subscriber Subscriber) (Event, error) {
 	for {
 		select {
@@ -109,24 +116,35 @@ func (publisher Publisher) getNext(subscriber Subscriber) (Event, error) {
 //	OBSERVABLE   //
 //#################//
 
+//Simple factory function to create the [Observable] with the [Publisher] inside.
 func (observable Observable) just(publisher Publisher) Observable {
 	observable.Publisher = publisher
 	return observable
 }
 
-//Function to subscribe [Subscriber]
+/*
+Function to create [Subscriber] with the functions we receive, and then in a infinite [for] loop
+we ask to the publisher for the next message, which return a tuple of (Event, Error).
+
+In case the tuple Error is nil, we invoke the [doOnNext] function of the subscriber passing the event.
+Otherwise we invoke the [doOnError] and [doOnComplete] to finish the emission of the stream.
+
+Finally to prove the [Back-pressure] concept here, we make delay of [500 ms] which represent some business logic delay,
+which is higher than the production of events in the producer [100 ms] proving than is the subscriber the one
+that mark the speed of consumption in the stream.
+*/
 func (observable Observable) subscribe(onNext func(event Event), onError func(error), onComplete func()) {
 	//Create subscriber
 	subscriber := Subscriber{onNext, onError, onComplete}
 	//For provide an infinite loop
 	for {
 		event, err := observable.Publisher.getNext(subscriber)
-		if err != nil {
+		if err == nil {
+			subscriber.doOnNext(event)
+		} else {
 			subscriber.doOnError(err)
 			subscriber.doOnComplete()
 			break
-		} else {
-			subscriber.doOnNext(event)
 		}
 		time.Sleep(500 * time.Millisecond) // business logic delay (Connection with other backend and so on)
 	}
