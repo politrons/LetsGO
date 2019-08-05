@@ -26,7 +26,8 @@ The design it divide in two parts, the [publisher], [observable] and [subscriber
 /**
 For this test, we create a [Publisher] and we start appending Events in the [channel] of Events with a production of 100 ms (Higher than what consumer can process)
 
-Then we create an [Observable] passing the publisher and we [subscribe] passing three functions that they will be invoked by the Observable, for a specific state.
+Then we create an [Observable] using [just] function, passing the publisher and next we [subscribe] passing three functions that they will be invoked by the Observable,
+for a specific state.
 Those functions are:
 	[doOnNext(event Event)]: A consumer function that receive the event passed from the publisher to do something.
 	[doOnError(error Error)]: A consumer function that receive an error in the emission and process of one of the events
@@ -55,26 +56,31 @@ func TestPublisherSubscriberPattern(t *testing.T) {
 			})
 }
 
+//Event type passed between publisher/subscriber
 type Event struct {
 	value string
 }
 
+//Type that receive events and pass to the subscriber when he ask for.
 type Publisher struct {
 	id      string
 	channel chan Event
 }
 
+//Observable type that contains the publisher and create the [Subscriber]
 type Observable struct {
 	Id        string
 	Publisher Publisher
 }
 
+//Subscriber type that contains the functions to execute once we receive an event, error or end of emission.
 type Subscriber struct {
 	doOnNext     func(event Event)
 	doOnError    func(err error)
 	doOnComplete func()
 }
 
+//Error type to specify the emission has finish
 type NoMoreEvents struct {
 	Cause string
 }
