@@ -32,6 +32,7 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 ### Patterns
 ![My image](img/pattern.png)    
 * **[Dependency Injection & DDD](features/src/politrons/tools/DI)**
+* **[Publisher/Subscriber](features/src/politrons/tools/publisherSubscriber/PublisherSubscriberPattern_test.go)**
 * **[Functional options](features/src/politrons/tools/functionalOptions/FunctionalOptions_test.go)**
 * **[Builder pattern](features/src/politrons/tools/builder/BuilderPattern_test.go)**
 * **[Decorator pattern](features/src/politrons/tools/decorator/DecoratorPattern_test.go)**
