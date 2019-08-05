@@ -8,7 +8,7 @@ import (
 )
 
 //##################################//
-//	PUBLISHER/SUBSCRIBER PATTERN  //
+//PUBLISHER/SUBSCRIBER PATTERN  //
 //##################################//
 
 /**
