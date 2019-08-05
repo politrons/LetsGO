@@ -26,7 +26,7 @@ The design it divide in two parts, the [publisher], [observable] and [subscriber
 /**
 For this test, we create a [Publisher] and we start appending Events in the [channel] of Events with a production of 100 ms (Higher than what consumer can process)
 
-Then we create an [Observable] using [just] function, passing the publisher and next we [Subscribe] passing three functions that they will be invoked by the Observable,
+Then we create an [Observable] using [Just] function, passing the publisher and next we [Subscribe] passing three functions that they will be invoked by the Observable,
 for a specific state.
 Those functions are:
 	[doOnNext(event Event)]: A consumer function that receive the event passed from the publisher to do something.
@@ -45,15 +45,13 @@ func TestPublisherSubscriberPattern(t *testing.T) {
 		}
 	}()
 
-	new(Observable).just(publisher).
-		Map(
-			func(i interface{}) interface{} {
-				return "[" + i.(Event).value + "]"
-			}).
-		Map(
-			func(i interface{}) interface{} {
-				return "**" + i.(string) + "**"
-			}).
+	new(Observable).Just(publisher).
+		Map(func(i interface{}) interface{} {
+			return "[" + i.(Event).value + "]"
+		}).
+		Map(func(i interface{}) interface{} {
+			return "**" + i.(string) + "**"
+		}).
 		Subscribe(
 			func(value interface{}) {
 				fmt.Printf("New event recieved %s \n", value.(string))
@@ -126,7 +124,7 @@ func (publisher Publisher) getNext(subscriber Subscriber) (Event, error) {
 //#################//
 
 //Simple factory function to create the [Observable] with the [Publisher] inside.
-func (observable Observable) just(publisher Publisher) Observable {
+func (observable Observable) Just(publisher Publisher) Observable {
 	observable.Publisher = publisher
 	return observable
 }
