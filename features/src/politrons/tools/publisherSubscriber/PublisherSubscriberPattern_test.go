@@ -47,8 +47,8 @@ func TestPublisherSubscriberPattern(t *testing.T) {
 
 	new(Observable).just(publisher).
 		Map(
-			func(event Event) interface{} {
-				return "[" + event.value + "]"
+			func(i interface{}) interface{} {
+				return "[" + i.(Event).value + "]"
 			}).
 		Subscribe(
 			func(value interface{}) {
@@ -74,7 +74,7 @@ type Publisher struct {
 //Observable type that contains the publisher and create the [Subscriber]
 type Observable struct {
 	Id        string
-	doOnMap   func(event Event) interface{}
+	doOnMaps  []func(value interface{}) interface{}
 	Publisher Publisher
 }
 
@@ -127,8 +127,8 @@ func (observable Observable) just(publisher Publisher) Observable {
 	return observable
 }
 
-func (observable Observable) Map(mapFunc func(event Event) interface{}) Observable {
-	observable.doOnMap = mapFunc
+func (observable Observable) Map(mapFunc func(event interface{}) interface{}) Observable {
+	observable.doOnMaps = append(observable.doOnMaps, mapFunc)
 	return observable
 }
 
@@ -147,8 +147,11 @@ func (observable Observable) Subscribe(onNext func(value interface{}), onError f
 	subscriber := Subscriber{onNext, onError, onComplete}
 	for {
 		event, err := observable.Publisher.getNext(subscriber)
+		var transformedValue interface{} = event
 		if err == nil {
-			transformedValue := observable.doOnMap(event)
+			for _, doOnMap := range observable.doOnMaps {
+				transformedValue = doOnMap(transformedValue)
+			}
 			subscriber.doOnNext(transformedValue)
 		} else {
 			subscriber.doOnError(err)
