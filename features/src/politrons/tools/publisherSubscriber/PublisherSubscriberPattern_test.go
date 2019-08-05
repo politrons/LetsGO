@@ -50,6 +50,10 @@ func TestPublisherSubscriberPattern(t *testing.T) {
 			func(i interface{}) interface{} {
 				return "[" + i.(Event).value + "]"
 			}).
+		Map(
+			func(i interface{}) interface{} {
+				return "**" + i.(string) + "**"
+			}).
 		Subscribe(
 			func(value interface{}) {
 				fmt.Printf("New event reveiced %s \n", value.(string))
