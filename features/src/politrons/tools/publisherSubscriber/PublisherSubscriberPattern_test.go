@@ -26,7 +26,7 @@ The design it divide in two parts, the [publisher], [observable] and [subscriber
 /**
 For this test, we create a [Publisher] and we start appending Events in the [channel] of Events with a production of 100 ms (Higher than what consumer can process)
 
-Then we create an [Observable] using [just] function, passing the publisher and next we [subscribe] passing three functions that they will be invoked by the Observable,
+Then we create an [Observable] using [just] function, passing the publisher and next we [Subscribe] passing three functions that they will be invoked by the Observable,
 for a specific state.
 Those functions are:
 	[doOnNext(event Event)]: A consumer function that receive the event passed from the publisher to do something.
@@ -46,9 +46,13 @@ func TestPublisherSubscriberPattern(t *testing.T) {
 	}()
 
 	new(Observable).just(publisher).
-		subscribe(
-			func(event Event) {
-				fmt.Printf("New event reveiced %s \n", event.value)
+		Map(
+			func(event Event) interface{} {
+				return "[" + event.value + "]"
+			}).
+		Subscribe(
+			func(value interface{}) {
+				fmt.Printf("New event reveiced %s \n", value.(string))
 			}, func(e error) {
 				fmt.Printf("Error in pipeline %e \n", e)
 			}, func() {
@@ -70,12 +74,13 @@ type Publisher struct {
 //Observable type that contains the publisher and create the [Subscriber]
 type Observable struct {
 	Id        string
+	doOnMap   func(event Event) interface{}
 	Publisher Publisher
 }
 
 //Subscriber type that contains the functions to execute once we receive an event, error or end of emission.
 type Subscriber struct {
-	doOnNext     func(event Event)
+	doOnNext     func(value interface{})
 	doOnError    func(err error)
 	doOnComplete func()
 }
@@ -97,7 +102,7 @@ func (publisher Publisher) appendEvent(event Event) {
 /*
 This function is invoked by the observable when he can process new messages.
 It will try to read from the channel using [for] we create this infinite loop and using [select]
-We're able to subscribe to the channel waiting for the element, and also we define a max wait time [2000]
+We're able to Subscribe to the channel waiting for the element, and also we define a max wait time [2000]
 where after that we return the error that no more events on channel found.
 */
 func (publisher Publisher) getNext(subscriber Subscriber) (Event, error) {
@@ -122,25 +127,29 @@ func (observable Observable) just(publisher Publisher) Observable {
 	return observable
 }
 
+func (observable Observable) Map(mapFunc func(event Event) interface{}) Observable {
+	observable.doOnMap = mapFunc
+	return observable
+}
+
 /*
 Function to create [Subscriber] with the functions we receive, and then in a infinite [for] loop
 we ask to the publisher for the next message, which return a tuple of (Event, Error).
 
-In case the tuple Error is nil, we invoke the [doOnNext] function of the subscriber passing the event.
+In case the tuple Error is nil, we invoke the [doOnMap] to transform the event, and then [doOnNext] function of the subscriber passing the event.
 Otherwise we invoke the [doOnError] and [doOnComplete] to finish the emission of the stream.
 
 Finally to prove the [Back-pressure] concept here, we make delay of [500 ms] which represent some business logic delay,
 which is higher than the production of events in the producer [100 ms] proving than is the subscriber the one
 that mark the speed of consumption in the stream.
 */
-func (observable Observable) subscribe(onNext func(event Event), onError func(error), onComplete func()) {
-	//Create subscriber
+func (observable Observable) Subscribe(onNext func(value interface{}), onError func(error), onComplete func()) {
 	subscriber := Subscriber{onNext, onError, onComplete}
-	//For provide an infinite loop
 	for {
 		event, err := observable.Publisher.getNext(subscriber)
 		if err == nil {
-			subscriber.doOnNext(event)
+			transformedValue := observable.doOnMap(event)
+			subscriber.doOnNext(transformedValue)
 		} else {
 			subscriber.doOnError(err)
 			subscriber.doOnComplete()
