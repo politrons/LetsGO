@@ -56,7 +56,7 @@ func TestPublisherSubscriberPattern(t *testing.T) {
 			}).
 		Subscribe(
 			func(value interface{}) {
-				fmt.Printf("New event reveiced %s \n", value.(string))
+				fmt.Printf("New event recieved %s \n", value.(string))
 			}, func(e error) {
 				fmt.Printf("Error in pipeline %e \n", e)
 			}, func() {
@@ -140,7 +140,8 @@ func (observable Observable) Map(mapFunc func(event interface{}) interface{}) Ob
 Function to create [Subscriber] with the functions we receive, and then in a infinite [for] loop
 we ask to the publisher for the next message, which return a tuple of (Event, Error).
 
-In case the tuple Error is nil, we invoke the [doOnMap] to transform the event, and then [doOnNext] function of the subscriber passing the event.
+In case the tuple Error is nil, we iterate over the array of functions [doOnMap], and we invoke the [doOnMap] to transform the event,
+and then [doOnNext] function of the subscriber passing the transformed event.
 Otherwise we invoke the [doOnError] and [doOnComplete] to finish the emission of the stream.
 
 Finally to prove the [Back-pressure] concept here, we make delay of [500 ms] which represent some business logic delay,
