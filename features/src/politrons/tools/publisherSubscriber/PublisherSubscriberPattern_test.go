@@ -2,21 +2,20 @@ package publisherSubscriber
 
 import (
 	"fmt"
+	"strconv"
 	"testing"
 	"time"
 )
 
 func TestPublisherSubscriberPattern(t *testing.T) {
-	events := []Event{{"Hello"}, {"Publisher"}, {"subscriber"}, {"world"}}
-	publisher := Publisher{"1000", make(chan Event), events}
-	/*	newPublisher := publisher.appendEvent(Event{"last message"})
-	 */
+	publisher := Publisher{"1000", make(chan Event)}
+
 	index := 0
 	go func() {
 		for index < 100 {
-			publisher.appendEvent(Event{"message:" + string(index)})
+			publisher.appendEvent(Event{"message:" + strconv.Itoa(index)})
 			index++
-			time.Sleep(500 * time.Millisecond)
+			time.Sleep(100 * time.Millisecond)
 		}
 	}()
 
@@ -36,9 +35,8 @@ type Event struct {
 }
 
 type Publisher struct {
-	id         string
-	channel    chan Event
-	eventQueue []Event
+	id      string
+	channel chan Event
 }
 
 type Observable struct {
@@ -47,7 +45,6 @@ type Observable struct {
 }
 
 type Subscriber struct {
-	Offset       int
 	doOnNext     func(event Event)
 	doOnError    func(err error)
 	doOnComplete func()
@@ -63,8 +60,6 @@ type NoMoreEvents struct {
 
 func (publisher Publisher) appendEvent(event Event) {
 	go func() { publisher.channel <- event }()
-	/*	publisher.eventQueue = append(publisher.eventQueue, event)
-		return publisher*/
 }
 
 func (publisher Publisher) getNext(subscriber Subscriber) (Event, error) {
@@ -77,12 +72,6 @@ func (publisher Publisher) getNext(subscriber Subscriber) (Event, error) {
 
 		}
 	}
-	/*if len(publisher.eventQueue) > subscriber.Offset {
-		event := publisher.eventQueue[subscriber.Offset]
-		return event, nil
-	} else {
-		return Event{}, NoMoreEvents{"No more events from publisher"}
-	}*/
 }
 
 //#################//
@@ -97,7 +86,7 @@ func (observable Observable) just(publisher Publisher) Observable {
 //Function to subscribe [Subscriber]
 func (observable Observable) subscribe(onNext func(event Event), onError func(error), onComplete func()) {
 	//Create subscriber
-	subscriber := Subscriber{0, onNext, onError, onComplete}
+	subscriber := Subscriber{onNext, onError, onComplete}
 	//For provide an infinite loop
 	for {
 		event, err := observable.Publisher.getNext(subscriber)
@@ -107,17 +96,11 @@ func (observable Observable) subscribe(onNext func(event Event), onError func(er
 			break
 		} else {
 			subscriber.doOnNext(event)
-			subscriber.Offset += 1 //Increase offset
 		}
+		time.Sleep(200 * time.Millisecond) // business logic delay (Connection with other backend and so on)
 	}
 }
 
 func (error NoMoreEvents) Error() string {
 	return error.Cause
-}
-
-func (publisher Publisher) checkMessageQueue() {
-	if publisher.eventQueue == nil {
-		publisher.eventQueue = []Event{}
-	}
 }
