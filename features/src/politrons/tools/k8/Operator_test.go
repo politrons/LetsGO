@@ -1,6 +1,7 @@
 package k8
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -10,6 +11,38 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 )
+
+func TestCreateNamespaceOperator(t *testing.T) {
+	// Set logging output to standard console out
+	log.SetOutput(os.Stdout)
+	kclient, err := createClientset()
+	if err != nil {
+		panic(err.Error())
+	}
+	namespace, err := CreateNewNameSpace(kclient)
+	if err != nil {
+		panic(err.Error())
+	}
+	log.Printf(fmt.Sprintf("New namespace %s created", namespace.Name))
+
+	log.Printf("Shutting down...")
+}
+
+func TestDeleteNamespaceOperator(t *testing.T) {
+	// Set logging output to standard console out
+	log.SetOutput(os.Stdout)
+	kclient, err := createClientset()
+	if err != nil {
+		panic(err.Error())
+	}
+	status, err := DeleteNewNameSpace(kclient)
+	if err != nil {
+		panic(err.Error())
+	}
+	log.Printf(fmt.Sprintf("Namespace deleted with status %v", status))
+
+	log.Printf("Shutting down...")
+}
 
 func TestAddRoleBindingOperator(t *testing.T) {
 	// Set logging output to standard console out

@@ -30,6 +30,37 @@ func NewNamespaceController(kclient *kubernetes.Clientset) *NamespaceController 
 	return &NamespaceController{kclient: kclient, namespaceInformer: createNameSpaceInformer(kclient)}
 }
 
+//###########################//
+//  	  NAMESPACE 		 //
+//########################## //
+
+func CreateNewNameSpace(kclient *kubernetes.Clientset) (*v1.Namespace, error) {
+	namespaceSpec := &v1.Namespace{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "politrons-ns",
+		},
+	}
+
+	namespace, err := kclient.CoreV1().Namespaces().Create(namespaceSpec)
+	if err != nil {
+		return nil, err
+	}
+	return namespace, nil
+}
+
+func DeleteNewNameSpace(kclient *kubernetes.Clientset) (bool, error) {
+	deleteOptions := &metav1.DeleteOptions{}
+	err := kclient.CoreV1().Namespaces().Delete("politrons-ns", deleteOptions)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+//###########################//
+//  	 ROLE BINDING 		//
+//##########################//
+
 /**
 Create informer for watching Namespaces interactions use
 We use [NewSharedIndexInformer] which create an instance of an element to watch, that instance require the arguments:.
