@@ -11,7 +11,7 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-func TestOperator(t *testing.T) {
+func TestAddRoleBindingOperator(t *testing.T) {
 	// Set logging output to standard console out
 	log.SetOutput(os.Stdout)
 	stop := make(chan struct{})    // Create channel to receive stop signal
@@ -21,11 +21,51 @@ func TestOperator(t *testing.T) {
 		panic(err.Error())
 	}
 	NewNamespaceController(clientset).
-		AddEventHandler().
+		AddCreateRoleBindingEventHandler().
 		Run(stop, waitGroup)
 
 	/*	<-sigs // Wait for signals (this hangs until a signal arrives)
 	 */
+	log.Printf("Shutting down...")
+
+	close(stop)      // Tell goroutines to stop themselves
+	waitGroup.Wait() // Wait for all to be stopped
+}
+
+func TestUpdateRoleBindingOperator(t *testing.T) {
+	// Set logging output to standard console out
+	log.SetOutput(os.Stdout)
+	stop := make(chan struct{})    // Create channel to receive stop signal
+	waitGroup := &sync.WaitGroup{} // Goroutines can add themselves to this to be waited on so that they finish
+	clientset, err := createClientset()
+	if err != nil {
+		panic(err.Error())
+	}
+	NewNamespaceController(clientset).
+		AddUpdateRoleBindingEventHandler().
+		Run(stop, waitGroup)
+
+	/*	<-sigs // Wait for signals (this hangs until a signal arrives)
+	 */
+	log.Printf("Shutting down...")
+
+	close(stop)      // Tell goroutines to stop themselves
+	waitGroup.Wait() // Wait for all to be stopped
+}
+
+func TestDeleteRoleBindingOperator(t *testing.T) {
+	// Set logging output to standard console out
+	log.SetOutput(os.Stdout)
+	stop := make(chan struct{})    // Create channel to receive stop signal
+	waitGroup := &sync.WaitGroup{} // Goroutines can add themselves to this to be waited on so that they finish
+	clientset, err := createClientset()
+	if err != nil {
+		panic(err.Error())
+	}
+	NewNamespaceController(clientset).
+		AddDeleteRoleBindingEventHandler().
+		Run(stop, waitGroup)
+
 	log.Printf("Shutting down...")
 
 	close(stop)      // Tell goroutines to stop themselves
