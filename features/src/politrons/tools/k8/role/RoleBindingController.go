@@ -15,9 +15,9 @@ import (
 	"k8s.io/client-go/tools/cache"
 )
 
-// NamespaceController watches the kubernetes api for changes to namespaces and
+// SharedIndexInformer watches the kubernetes api for changes to namespaces and
 // creates a RoleBinding for that particular namespace.
-type RoleBindingController struct {
+type Controller struct {
 	namespaceInformer cache.SharedIndexInformer
 	kclient           *kubernetes.Clientset
 }
@@ -26,8 +26,8 @@ type RoleBindingController struct {
 Factory function to create the [NewNamespaceController] type passing the [Clientset] and also
  the SharedIndexInformer to be used add handler to handle the events on resource
 */
-func NewRoleBindingController(kclient *kubernetes.Clientset) *RoleBindingController {
-	return &RoleBindingController{kclient: kclient, namespaceInformer: createNameSpaceInformer(kclient)}
+func NewRoleBindingController(kclient *kubernetes.Clientset) *Controller {
+	return &Controller{kclient: kclient, namespaceInformer: createNameSpaceInformer(kclient)}
 }
 
 //###########################//
@@ -65,21 +65,21 @@ We pass as Handler the type [ResourceEventHandlerFuncs] which allow pass three f
 [UpdateFunc]:
 [DeleteFunc]
 */
-func (controller *RoleBindingController) AddCreateRoleBindingEventHandler() *RoleBindingController {
+func (controller *Controller) AddCreateRoleBindingEventHandler() *Controller {
 	controller.namespaceInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: controller.createRoleBindingByNamespace,
 	})
 	return controller
 }
 
-func (controller *RoleBindingController) AddUpdateRoleBindingEventHandler() *RoleBindingController {
+func (controller *Controller) AddUpdateRoleBindingEventHandler() *Controller {
 	controller.namespaceInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: controller.updateRoleBindingByNamespace,
 	})
 	return controller
 }
 
-func (controller *RoleBindingController) AddDeleteRoleBindingEventHandler() *RoleBindingController {
+func (controller *Controller) AddDeleteRoleBindingEventHandler() *Controller {
 	controller.namespaceInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: controller.deleteRoleBindingByNamespace,
 	})
@@ -90,7 +90,7 @@ func (controller *RoleBindingController) AddDeleteRoleBindingEventHandler() *Rol
 In this function we receive the namespace as obj, so we transform into [Namespace]
 and we use it to invoke another functions to create the [roleBinding]
 */
-func (controller *RoleBindingController) createRoleBindingByNamespace(obj interface{}) {
+func (controller *Controller) createRoleBindingByNamespace(obj interface{}) {
 	namespaceObj := obj.(*v1.Namespace)
 	namespaceName := namespaceObj.Name
 	roleBinding := controller.createRoleBindingInfo(namespaceName, "RoleBinding")
@@ -101,7 +101,7 @@ func (controller *RoleBindingController) createRoleBindingByNamespace(obj interf
 In this function we receive the namespace as obj, so we transform into [Namespace]
 and we use it to invoke another functions to update the [roleBinding]
 */
-func (controller *RoleBindingController) updateRoleBindingByNamespace(obj interface{}) {
+func (controller *Controller) updateRoleBindingByNamespace(obj interface{}) {
 	namespaceObj := obj.(*v1.Namespace)
 	namespaceName := namespaceObj.Name
 	roleBinding := controller.createRoleBindingInfo(namespaceName, "RoleBinding2")
@@ -112,13 +112,13 @@ func (controller *RoleBindingController) updateRoleBindingByNamespace(obj interf
 In this function we receive the namespace as obj, so we transform into [Namespace]
 and we use it to invoke another functions to delete the [roleBinding]
 */
-func (controller *RoleBindingController) deleteRoleBindingByNamespace(obj interface{}) {
+func (controller *Controller) deleteRoleBindingByNamespace(obj interface{}) {
 	namespaceObj := obj.(*v1.Namespace)
 	controller.deleteRoleBindingInNameSpace(namespaceObj.Name)
 }
 
 //Create the roleBinding to pass later to RoleBindings creation
-func (controller *RoleBindingController) createRoleBindingInfo(namespaceName string, kind string) *rbacV1.RoleBinding {
+func (controller *Controller) createRoleBindingInfo(namespaceName string, kind string) *rbacV1.RoleBinding {
 	roleBinding := &rbacV1.RoleBinding{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       kind,
@@ -146,7 +146,7 @@ func (controller *RoleBindingController) createRoleBindingInfo(namespaceName str
 /**
 Function to add a [RoleBinding] in the specific namespace
 */
-func (controller *RoleBindingController) addRoleBindingInNameSpace(namespaceName string, roleBinding *rbacV1.RoleBinding) {
+func (controller *Controller) addRoleBindingInNameSpace(namespaceName string, roleBinding *rbacV1.RoleBinding) {
 	_, err := controller.kclient.RbacV1().RoleBindings(namespaceName).Create(roleBinding)
 	controller.logResponse("Create", err, namespaceName)
 }
@@ -154,7 +154,7 @@ func (controller *RoleBindingController) addRoleBindingInNameSpace(namespaceName
 /**
 Function to update a [RoleBinding] in the specific namespace
 */
-func (controller *RoleBindingController) updateRoleBindingInNameSpace(namespaceName string, roleBinding *rbacV1.RoleBinding) {
+func (controller *Controller) updateRoleBindingInNameSpace(namespaceName string, roleBinding *rbacV1.RoleBinding) {
 	_, err := controller.kclient.RbacV1().RoleBindings(namespaceName).Update(roleBinding)
 	controller.logResponse("Update", err, namespaceName)
 }
@@ -162,13 +162,13 @@ func (controller *RoleBindingController) updateRoleBindingInNameSpace(namespaceN
 /**
 Function to delete a [RoleBinding] in the specific namespace
 */
-func (controller *RoleBindingController) deleteRoleBindingInNameSpace(namespaceName string) {
+func (controller *Controller) deleteRoleBindingInNameSpace(namespaceName string) {
 	var options *metav1.DeleteOptions
 	err := controller.kclient.RbacV1().RoleBindings(namespaceName).Delete(fmt.Sprintf("ad-kubernetes-%s", namespaceName), options)
 	controller.logResponse("Delete", err, namespaceName)
 }
 
-func (controller *RoleBindingController) logResponse(action string, err error, namespaceName string) {
+func (controller *Controller) logResponse(action string, err error, namespaceName string) {
 	if err != nil {
 		log.Println(fmt.Sprintf("%s :Failed to Role Binding: %s", action, err.Error()))
 	} else {
@@ -186,7 +186,7 @@ We define the channel in read mode
 chan<- // write only
 chan   // write/read
 */
-func (controller *RoleBindingController) Run(stopCh <-chan struct{}, wg *sync.WaitGroup) {
+func (controller *Controller) Run(stopCh <-chan struct{}, wg *sync.WaitGroup) {
 	// When this function completes, mark the go function as done
 	defer wg.Done()
 	// Increment wait group as we're about to execute a go function
