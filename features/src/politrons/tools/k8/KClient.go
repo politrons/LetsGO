@@ -15,7 +15,7 @@ We use [os.Getenv("HOME")] to get the home path, and in there we use the the cur
 
 Finally we use [kubernetes.NewForConfig] passing the config to create the [Clientset]
 */
-func createClientset() (*kubernetes.Clientset, error) {
+func CreateClientset() (*kubernetes.Clientset, error) {
 	homeDir := os.Getenv("HOME")
 	kubeConfigLocation := filepath.Join(homeDir, ".kube", "config")
 	config, err := clientcmd.BuildConfigFromFlags("", kubeConfigLocation)

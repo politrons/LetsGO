@@ -1,4 +1,4 @@
-package k8
+package role
 
 import (
 	"fmt"

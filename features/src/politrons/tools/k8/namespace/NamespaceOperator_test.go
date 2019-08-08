@@ -1,16 +1,17 @@
-package k8
+package namespace
 
 import (
 	"fmt"
 	"log"
 	"os"
+	"politrons/tools/k8"
 	"testing"
 )
 
 func TestCreateNamespaceOperator(t *testing.T) {
 	// Set logging output to standard console out
 	log.SetOutput(os.Stdout)
-	kclient, err := createClientset()
+	kclient, err := k8.CreateClientset()
 	if err != nil {
 		panic(err.Error())
 	}
@@ -26,7 +27,7 @@ func TestCreateNamespaceOperator(t *testing.T) {
 func TestDeleteNamespaceOperator(t *testing.T) {
 	// Set logging output to standard console out
 	log.SetOutput(os.Stdout)
-	kclient, err := createClientset()
+	kclient, err := k8.CreateClientset()
 	if err != nil {
 		panic(err.Error())
 	}

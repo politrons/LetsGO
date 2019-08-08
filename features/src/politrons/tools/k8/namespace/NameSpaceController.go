@@ -1,4 +1,4 @@
-package k8
+package namespace
 
 import (
 	"k8s.io/api/core/v1"
