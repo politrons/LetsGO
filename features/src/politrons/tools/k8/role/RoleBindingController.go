@@ -89,32 +89,42 @@ func (controller *Controller) AddDeleteRoleBindingEventHandler() *Controller {
 /**
 In this function we receive the namespace as obj, so we transform into [Namespace]
 and we use it to invoke another functions to create the [roleBinding]
+
+Finally we add a [RoleBinding] in the specific namespace
 */
 func (controller *Controller) createRoleBindingByNamespace(obj interface{}) {
 	namespaceObj := obj.(*v1.Namespace)
 	namespaceName := namespaceObj.Name
 	roleBinding := controller.createRoleBindingInfo(namespaceName, "RoleBinding")
-	controller.addRoleBindingInNameSpace(namespaceName, roleBinding)
+	_, err := controller.kclient.RbacV1().RoleBindings(namespaceName).Create(roleBinding)
+	controller.logResponse("Create", err, namespaceName)
 }
 
 /**
 In this function we receive the namespace as obj, so we transform into [Namespace]
 and we use it to invoke another functions to update the [roleBinding]
+
+Finally we update a [RoleBinding] in the specific namespace
 */
 func (controller *Controller) updateRoleBindingByNamespace(obj interface{}) {
 	namespaceObj := obj.(*v1.Namespace)
 	namespaceName := namespaceObj.Name
 	roleBinding := controller.createRoleBindingInfo(namespaceName, "RoleBinding2")
-	controller.updateRoleBindingInNameSpace(namespaceName, roleBinding)
+	_, err := controller.kclient.RbacV1().RoleBindings(namespaceName).Update(roleBinding)
+	controller.logResponse("Update", err, namespaceName)
 }
 
 /**
 In this function we receive the namespace as obj, so we transform into [Namespace]
 and we use it to invoke another functions to delete the [roleBinding]
+
+Finally we delete a [RoleBinding] in the specific namespace
 */
 func (controller *Controller) deleteRoleBindingByNamespace(obj interface{}) {
-	namespaceObj := obj.(*v1.Namespace)
-	controller.deleteRoleBindingInNameSpace(namespaceObj.Name)
+	namespaceName := obj.(*v1.Namespace).Name
+	var options *metav1.DeleteOptions
+	err := controller.kclient.RbacV1().RoleBindings(namespaceName).Delete(fmt.Sprintf("ad-kubernetes-%s", namespaceName), options)
+	controller.logResponse("Delete", err, namespaceName)
 }
 
 //Create the roleBinding to pass later to RoleBindings creation
@@ -141,31 +151,6 @@ func (controller *Controller) createRoleBindingInfo(namespaceName string, kind s
 		},
 	}
 	return roleBinding
-}
-
-/**
-Function to add a [RoleBinding] in the specific namespace
-*/
-func (controller *Controller) addRoleBindingInNameSpace(namespaceName string, roleBinding *rbacV1.RoleBinding) {
-	_, err := controller.kclient.RbacV1().RoleBindings(namespaceName).Create(roleBinding)
-	controller.logResponse("Create", err, namespaceName)
-}
-
-/**
-Function to update a [RoleBinding] in the specific namespace
-*/
-func (controller *Controller) updateRoleBindingInNameSpace(namespaceName string, roleBinding *rbacV1.RoleBinding) {
-	_, err := controller.kclient.RbacV1().RoleBindings(namespaceName).Update(roleBinding)
-	controller.logResponse("Update", err, namespaceName)
-}
-
-/**
-Function to delete a [RoleBinding] in the specific namespace
-*/
-func (controller *Controller) deleteRoleBindingInNameSpace(namespaceName string) {
-	var options *metav1.DeleteOptions
-	err := controller.kclient.RbacV1().RoleBindings(namespaceName).Delete(fmt.Sprintf("ad-kubernetes-%s", namespaceName), options)
-	controller.logResponse("Delete", err, namespaceName)
 }
 
 func (controller *Controller) logResponse(action string, err error, namespaceName string) {

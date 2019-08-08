@@ -8,6 +8,8 @@ import (
 )
 
 /**
+client-go is being used by Kubernetes as the offical API client library
+
 Function that create the [Clientset] which is basically the Kubernetes client that contains all
 Clients to make API calls to the Kubernetes API.
 
