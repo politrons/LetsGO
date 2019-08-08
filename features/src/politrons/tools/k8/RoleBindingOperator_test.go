@@ -1,48 +1,11 @@
 package k8
 
 import (
-	"fmt"
 	"log"
 	"os"
-	"path/filepath"
 	"sync"
 	"testing"
-
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/clientcmd"
 )
-
-func TestCreateNamespaceOperator(t *testing.T) {
-	// Set logging output to standard console out
-	log.SetOutput(os.Stdout)
-	kclient, err := createClientset()
-	if err != nil {
-		panic(err.Error())
-	}
-	namespace, err := CreateNewNameSpace(kclient)
-	if err != nil {
-		panic(err.Error())
-	}
-	log.Printf(fmt.Sprintf("New namespace %s created", namespace.Name))
-
-	log.Printf("Shutting down...")
-}
-
-func TestDeleteNamespaceOperator(t *testing.T) {
-	// Set logging output to standard console out
-	log.SetOutput(os.Stdout)
-	kclient, err := createClientset()
-	if err != nil {
-		panic(err.Error())
-	}
-	status, err := DeleteNewNameSpace(kclient)
-	if err != nil {
-		panic(err.Error())
-	}
-	log.Printf(fmt.Sprintf("Namespace deleted with status %v", status))
-
-	log.Printf("Shutting down...")
-}
 
 func TestAddRoleBindingOperator(t *testing.T) {
 	// Set logging output to standard console out
@@ -53,7 +16,7 @@ func TestAddRoleBindingOperator(t *testing.T) {
 	if err != nil {
 		panic(err.Error())
 	}
-	NewNamespaceController(clientset).
+	NewRoleBindingController(clientset).
 		AddCreateRoleBindingEventHandler().
 		Run(stop, waitGroup)
 
@@ -74,7 +37,7 @@ func TestUpdateRoleBindingOperator(t *testing.T) {
 	if err != nil {
 		panic(err.Error())
 	}
-	NewNamespaceController(clientset).
+	NewRoleBindingController(clientset).
 		AddUpdateRoleBindingEventHandler().
 		Run(stop, waitGroup)
 
@@ -95,7 +58,7 @@ func TestDeleteRoleBindingOperator(t *testing.T) {
 	if err != nil {
 		panic(err.Error())
 	}
-	NewNamespaceController(clientset).
+	NewRoleBindingController(clientset).
 		AddDeleteRoleBindingEventHandler().
 		Run(stop, waitGroup)
 
@@ -103,22 +66,4 @@ func TestDeleteRoleBindingOperator(t *testing.T) {
 
 	close(stop)      // Tell goroutines to stop themselves
 	waitGroup.Wait() // Wait for all to be stopped
-}
-
-/**
-Function that create the [Clientset] which is basically the Kubernetes client that contains all
-Clients to make API calls to the Kubernetes API.
-
-We use [os.Getenv("HOME")] to get the home path, and in there we use the the current context in kubeconfig [~/.kube/config]
-
-Finally we use [kubernetes.NewForConfig] passing the config to create the [Clientset]
-*/
-func createClientset() (*kubernetes.Clientset, error) {
-	homeDir := os.Getenv("HOME")
-	kubeConfigLocation := filepath.Join(homeDir, ".kube", "config")
-	config, err := clientcmd.BuildConfigFromFlags("", kubeConfigLocation)
-	if err != nil {
-		return nil, err
-	}
-	return kubernetes.NewForConfig(config)
 }
