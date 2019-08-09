@@ -63,6 +63,14 @@ func (controller *Controller) CreatePod(namespace string) (*v1.Pod, error) {
 	return pod, err
 }
 
+/**
+In order to wait for the Pod to be created we can use [Watch] function, which it will ask for the type
+[ListOptions] as argument, and it will return a tuple of [watch.Interface] and error.
+
+Watch.Interface it contains the type [ResultChan] which is a channel that is will send you an [watch.Event]
+type, having this Event, we are able to extract the Object which in this case, it should be [Pod]
+then casting to [Pod] we can check the state of the Pod, and wait until the [status.Phase] is not [PodPending]
+*/
 func (controller *Controller) watchAndReturnPodWhenReady(err error, namespace string, pod *v1.Pod) *v1.Pod {
 	watch, err := controller.kclient.CoreV1().Pods(namespace).Watch(metav1.ListOptions{
 		Watch:           true,
