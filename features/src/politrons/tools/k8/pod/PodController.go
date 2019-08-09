@@ -92,7 +92,7 @@ func (controller *Controller) watchAndReturnPodWhenReady(err error, namespace st
 					watch.Stop()
 					return
 				}
-			case <-time.After(10 * time.Second):
+			case <-time.After(10 * time.Minute):
 				log.Println("Error Pod took too much time to be created.")
 				watch.Stop()
 				return
@@ -123,7 +123,7 @@ Finally and most important we define the [PodSpec] where we describe the array o
 contains. It's an array of [Container] which each has a name and image. The pod it will pull the image from
 docker-hub and it will run inside the pod.
 
-For this example we will run an Nginx server.
+For this example we will pull an run Cassandra and Nginx server.
 */
 func (controller *Controller) createPodInfo(namespace string) *v1.Pod {
 	return &v1.Pod{TypeMeta: metav1.TypeMeta{
@@ -138,7 +138,31 @@ func (controller *Controller) createPodInfo(namespace string) *v1.Pod {
 			Containers: []v1.Container{
 				{
 					Name:  "nginx", //
-					Image: "nginx", //Image you want to pull and run
+					Image: "nginx", //Nginx image you want to pull and run
+				},
+				{
+					Name:  "cassandra", //
+					Image: "cassandra", //Cassandra image you want to pull and run
+					Ports: []v1.ContainerPort{
+						{
+							Name:          "client-port",
+							Protocol:      v1.ProtocolTCP,
+							HostIP:        "0.0.0.0",
+							ContainerPort: 9042,
+						},
+						{
+							Name:          "thrift",
+							Protocol:      v1.ProtocolTCP,
+							HostIP:        "0.0.0.0",
+							ContainerPort: 9160,
+						},
+						{
+							Name:          "inter-node",
+							Protocol:      v1.ProtocolTCP,
+							ContainerPort: 7001,
+							HostPort:      7000,
+						},
+					},
 				},
 			},
 		},
