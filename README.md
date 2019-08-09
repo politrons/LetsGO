@@ -56,7 +56,7 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 * **[Who is watching](https://github.com/politrons/Who-is-watching)**
 
 ### Kubernetes
-![My image](img/kubernetes.png)    
+![My image](img/kubernete.png)    
 
 Examples of Kubernetes Operators, that use [Go client](https://github.com/kubernetes/client-go) for talking to a kubernetes cluster.
 
