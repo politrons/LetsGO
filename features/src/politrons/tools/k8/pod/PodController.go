@@ -5,6 +5,8 @@ import (
 	"k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
+	"log"
+	"time"
 )
 
 /**
@@ -51,11 +53,41 @@ passing the pod.
 func (controller *Controller) CreatePod(namespace string) (*v1.Pod, error) {
 	podInfo := controller.createPodInfo(namespace)
 	pod, err := controller.kclient.CoreV1().Pods(namespace).Create(podInfo)
-
 	if err != nil {
 		return nil, err
 	}
+	pod = controller.watchAndReturnPodWhenReady(err, namespace, pod)
+	if pod.Status.Phase != v1.PodRunning {
+		return nil, fmt.Errorf("Pod is unavailable: %v", pod.Status.Phase)
+	}
 	return pod, err
+}
+
+func (controller *Controller) watchAndReturnPodWhenReady(err error, namespace string, pod *v1.Pod) *v1.Pod {
+	watch, err := controller.kclient.CoreV1().Pods(namespace).Watch(metav1.ListOptions{
+		Watch:           true,
+		ResourceVersion: pod.ResourceVersion,
+	})
+	func() {
+		for {
+			select {
+			case event, ok := <-watch.ResultChan():
+				if !ok {
+					log.Println("Error In the initialization of Pod.")
+				}
+				pod = event.Object.(*v1.Pod)
+				if pod.Status.Phase != v1.PodPending {
+					watch.Stop()
+					return
+				}
+			case <-time.After(10 * time.Second):
+				log.Println("Error Pod took too much time to be created.")
+				watch.Stop()
+				return
+			}
+		}
+	}()
+	return pod
 }
 
 /**
