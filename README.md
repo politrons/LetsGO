@@ -56,12 +56,12 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 * **[Who is watching](https://github.com/politrons/Who-is-watching)**
 
 ### Kubernetes
+![My image](img/kubernetes.png)    
 
 Examples of Kubernetes Operators, that use [Go client](https://github.com/kubernetes/client-go) for talking to a kubernetes cluster.
 
 Each operator is divide in the **Operator_test** that run the test and the **Controller** with the extended methods that interact with K8s API
 
-![My image](img/kubernetes.png)    
 
 * **[Namespace operator](features/src/politrons/tools/k8/namespace)**
 * **[Pod operator](features/src/politrons/tools/k8/pod)**
