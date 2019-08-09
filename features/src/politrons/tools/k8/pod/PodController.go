@@ -122,6 +122,8 @@ We provide some info of the pod using [TypeMeta], and also detail of the pod inf
 Finally and most important we define the [PodSpec] where we describe the array of containers that the Pod
 contains. It's an array of [Container] which each has a name and image. The pod it will pull the image from
 docker-hub and it will run inside the pod.
+
+For this example we will run an Nginx server.
 */
 func (controller *Controller) createPodInfo(namespace string) *v1.Pod {
 	return &v1.Pod{TypeMeta: metav1.TypeMeta{

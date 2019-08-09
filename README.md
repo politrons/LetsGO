@@ -54,3 +54,15 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 * **[Customer order service](programs/basket/README.md)**
 * **[Communications](programs/comunications)**
 * **[Who is watching](https://github.com/politrons/Who-is-watching)**
+
+### Kubernetes
+
+Examples of Kubernetes Operators, that use [Go client](https://github.com/kubernetes/client-go) for talking to a kubernetes cluster.
+
+Each operator is divide in the **Operator_test** that run the test and the **Controller** with the extended methods that interact with K8s API
+
+![My image](img/kubernetes.png)    
+
+* **[Namespace operator](features/src/politrons/tools/k8/namespace)**
+* **[Pod operator](features/src/politrons/tools/k8/pod)**
+* **[Role Binding operator](features/src/politrons/tools/k8/role)**
