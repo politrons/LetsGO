@@ -30,9 +30,9 @@ func NewRoleBindingController(kclient *kubernetes.Clientset) *Controller {
 	return &Controller{kclient: kclient, namespaceInformer: createNameSpaceInformer(kclient)}
 }
 
-//###########################//
-//  	 ROLE BINDING 		//
-//##########################//
+//#########################################//
+//  operations over Role binding API      //
+//########################################//
 
 /**
 Create informer for watching Namespaces interactions use

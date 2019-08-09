@@ -29,6 +29,10 @@ func NewPodController(kclient *kubernetes.Clientset) *Controller {
 	return &Controller{kclient: kclient}
 }
 
+//###################################//
+//      operations over Pod API      //
+//################################## //
+
 /**
 Function to get all pods in the namespace, we just use [List] operator which return a [PodList]
 and using the [Item] we receive the array of [Pod]
