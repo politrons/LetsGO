@@ -15,7 +15,7 @@ func TestItunes(t *testing.T) {
 }
 
 /**
-This funcrio
+This
 */
 func handleQuery() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -59,8 +59,8 @@ func createQuery() *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
 		Name: "Query",
 		Fields: graphql.Fields{
-			"songs": loadSongsField(),
-			"album": loadAlbumField(),
+			"actors": loadActorsField(),
+			"movie":  loadMovieField(),
 		},
 		Description: "A movie query with information of most famous movies",
 	})
@@ -74,34 +74,34 @@ func createQuery() *graphql.Object {
 A Field in graphql is through the type [Field] which is expected to be filled with:
 	Name:Name of the field
 	Type: Object type that define the attributes
-	Args:The that we expect to receive in the query
-	Resolve: Function to be invoked when the query use this field
+	Args:The filter arg that we expect to receive in the query and we will use in [Resolve] function
+	Resolve: Function to be invoked when the query use this field [actors] and is where use the args to filter from all the data
 	Description: description of the field
 
 */
-func loadSongsField() *graphql.Field {
+func loadActorsField() *graphql.Field {
 	return &graphql.Field{
-		Name: "Songs filed",
-		Type: graphql.NewList(songType),
+		Name: "Actor filed",
+		Type: graphql.NewList(actorType),
 		Args: graphql.FieldConfigArgument{
-			"album": &graphql.ArgumentConfig{
+			"movie": &graphql.ArgumentConfig{
 				Type: graphql.NewNonNull(graphql.String),
 			},
 		},
-		Resolve:     songResolver,
+		Resolve:     actorResolver,
 		Description: "Songs field to find a particular song using album",
 	}
 }
 
-func loadAlbumField() *graphql.Field {
+func loadMovieField() *graphql.Field {
 	return &graphql.Field{
-		Type: albumType,
+		Type: movieType,
 		Args: graphql.FieldConfigArgument{
 			"id": &graphql.ArgumentConfig{
 				Type: graphql.NewNonNull(graphql.String),
 			},
 		},
-		Resolve: albumResolver,
+		Resolve: movieResolver,
 	}
 }
 
@@ -109,17 +109,27 @@ func loadAlbumField() *graphql.Field {
 //	GRAPHQL RESOLVERS  #
 //######################
 
-var songResolver = func(params graphql.ResolveParams) (interface{}, error) {
-	album := params.Args["album"].(string)
-	println(album)
-	return songs, nil
+var actorResolver = func(params graphql.ResolveParams) (interface{}, error) {
+	movie := params.Args["movie"].(string)
+	filterActors := []Actor{}
+	for i := 0; i < len(actors); i++ {
+		if actors[i].Movie == movie {
+			filterActors = append(filterActors, actors[i])
+		}
+	}
+	/*	for _, song := range actors {
+		if song.ID == movie {
+			filterActors = append(filterActors, song)
+		}
+	}*/
+	return filterActors, nil
 }
 
-var albumResolver = func(params graphql.ResolveParams) (interface{}, error) {
+var movieResolver = func(params graphql.ResolveParams) (interface{}, error) {
 	id := params.Args["id"].(string)
-	for _, album := range albums {
-		if album.ID == id {
-			return album, nil
+	for _, movie := range albums {
+		if movie.ID == id {
+			return movie, nil
 		}
 	}
 	return nil, nil
@@ -128,7 +138,7 @@ var albumResolver = func(params graphql.ResolveParams) (interface{}, error) {
 //#################
 //	  GO TYPES    #
 //#################
-type Album struct {
+type Movie struct {
 	ID     string `json:"id,omitempty"`
 	Artist string `json:"artist"`
 	Title  string `json:"title"`
@@ -137,15 +147,9 @@ type Album struct {
 	Type   string `json:"type"`
 }
 
-type Artist struct {
-	ID   string `json:"id,omitempty"`
-	Name string `json:"name"`
-	Type string `json:"type"`
-}
-
-type Song struct {
+type Actor struct {
 	ID       string `json:"id,omitempty"`
-	Album    string `json:"album"`
+	Movie    string `json:"movie"`
 	Title    string `json:"title"`
 	Duration string `json:"duration"`
 	Type     string `json:"type"`
@@ -155,13 +159,13 @@ type Song struct {
 //	GRAPHQL OBJECT TYPES  #
 //#########################
 
-var songType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "Song",
+var actorType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "Actor",
 	Fields: graphql.Fields{
 		"id": &graphql.Field{
 			Type: graphql.String,
 		},
-		"album": &graphql.Field{
+		"movie": &graphql.Field{
 			Type: graphql.String,
 		},
 		"title": &graphql.Field{
@@ -173,23 +177,8 @@ var songType = graphql.NewObject(graphql.ObjectConfig{
 	},
 })
 
-var artistType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "Artist",
-	Fields: graphql.Fields{
-		"id": &graphql.Field{
-			Type: graphql.String,
-		},
-		"name": &graphql.Field{
-			Type: graphql.String,
-		},
-		"type": &graphql.Field{
-			Type: graphql.String,
-		},
-	},
-})
-
-var albumType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "Album",
+var movieType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "Movie",
 	Fields: graphql.Fields{
 		"id": &graphql.Field{
 			Type: graphql.String,
@@ -216,8 +205,8 @@ var albumType = graphql.NewObject(graphql.ObjectConfig{
 //	  MOCK DATA    #
 //##################
 
-var albums []Album = []Album{
-	Album{
+var albums = []Movie{
+	{
 		ID:     "ts-fearless",
 		Artist: "1",
 		Title:  "Fearless",
@@ -226,30 +215,22 @@ var albums []Album = []Album{
 	},
 }
 
-var artists []Artist = []Artist{
-	Artist{
-		ID:   "1",
-		Name: "Taylor Swift",
-		Type: "artist",
-	},
-}
-
-var songs []Song = []Song{
-	Song{
+var actors = []Actor{
+	{
 		ID:       "1",
-		Album:    "ts-fearless",
+		Movie:    "Titanic",
 		Title:    "Fearless",
 		Duration: "4:01",
 		Type:     "song",
 	},
-	Song{
+	{
 		ID:       "2",
-		Album:    "ts-fearless",
+		Movie:    "ts-fearless",
 		Title:    "Fifteen",
 		Duration: "4:54",
 		Type:     "song",
 	},
 }
 
-/*curl -g 'http://localhost:12345/graphql?query={songs(album:"ts-fearless"){title,duration}}'
+/*curl -g 'http://localhost:12345/graphql?query={actors(movie:"ts-fearless"){title,duration}}'
  */
