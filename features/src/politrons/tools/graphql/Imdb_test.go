@@ -1,5 +1,9 @@
 package graphql
 
+/*
+I have seen far by standing on the shoulders of giants.
+Example implemented in top of [cluster "github.com/graphql-go/graphql"]
+*/
 import (
 	"encoding/json"
 	"log"
@@ -9,13 +13,21 @@ import (
 	"github.com/graphql-go/graphql"
 )
 
-func TestItunes(t *testing.T) {
-	http.HandleFunc("/graphql", handleQuery())
+/*
+You can run the server and then make some Queries as bellow
+
+curl -g 'http://localhost:12345/imdb?query={actors(movie:"Matrix"){name,age}}'
+curl -g 'http://localhost:12345/imdb?query={actors(movie:"Fight_club"){name,age}}'
+*/
+
+func TestGraphQLServer(t *testing.T) {
+	http.HandleFunc("/imdb", handleQuery())
 	_ = http.ListenAndServe(":12345", nil)
 }
 
 /**
-This
+This a handle http function that is the responsible to run the query we receive by Http.
+We use [graphql.Do] where we have to pass as Params the [Schema] and the [Query] that we pass as [query] param
 */
 func handleQuery() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -32,7 +44,7 @@ func handleQuery() func(w http.ResponseWriter, r *http.Request) {
 }
 
 /**
-THis function use factory [graphql.NewSchema] where we pass [SchemaConfig] which basically require
+In order to create an GraphQL schema we use  factory [graphql.NewSchema] where we pass [SchemaConfig] which basically require
 a Object Query type
 */
 func createSchema() graphql.Schema {
@@ -62,7 +74,7 @@ func createQuery() *graphql.Object {
 			"actors": loadActorsField(),
 			"movie":  loadMovieField(),
 		},
-		Description: "A movie query with information of most famous movies",
+		Description: "A movie query with information of most famous movies and actors",
 	})
 }
 
@@ -89,7 +101,7 @@ func loadActorsField() *graphql.Field {
 			},
 		},
 		Resolve:     actorResolver,
-		Description: "Songs field to find a particular song using album",
+		Description: "Actor field to find a particular actor using movie",
 	}
 }
 
@@ -98,7 +110,7 @@ Same functionality than previous LoadActorField function but this one configure 
 */
 func loadMovieField() *graphql.Field {
 	return &graphql.Field{
-		Type: movieType,
+		Type: graphql.NewList(movieType),
 		Args: graphql.FieldConfigArgument{
 			"id": &graphql.ArgumentConfig{
 				Type: graphql.NewNonNull(graphql.String),
@@ -181,9 +193,6 @@ var movieType = graphql.NewObject(graphql.ObjectConfig{
 		"id": &graphql.Field{
 			Type: graphql.String,
 		},
-		"artist": &graphql.Field{
-			Type: graphql.String,
-		},
 		"title": &graphql.Field{
 			Type: graphql.String,
 		},
@@ -207,12 +216,11 @@ var movieType = graphql.NewObject(graphql.ObjectConfig{
 Go data types that we use to fill the data from our mocks database memory
 */
 type Movie struct {
-	ID     string `json:"id,omitempty"`
-	Artist string `json:"artist"`
-	Title  string `json:"title"`
-	Year   string `json:"year"`
-	Genre  string `json:"genre"`
-	Type   string `json:"type"`
+	ID    string `json:"id,omitempty"`
+	Title string `json:"title"`
+	Year  string `json:"year"`
+	Genre string `json:"genre"`
+	Type  string `json:"type"`
 }
 
 type Actor struct {
@@ -229,30 +237,32 @@ type Actor struct {
 
 var movies = []Movie{
 	{
-		ID:     "ts-fearless",
-		Artist: "1",
-		Title:  "Fearless",
-		Year:   "2008",
-		Type:   "album",
+		ID:    "Matrix",
+		Title: "Matrix",
+		Year:  "1999",
+		Type:  "movie",
+	},
+	{
+		ID:    "Fight_club",
+		Title: "Fight club",
+		Year:  "1999",
+		Type:  "movie",
 	},
 }
 
 var actors = []Actor{
 	{
 		ID:    "1",
-		Movie: "Titanic",
+		Movie: "Fight_club",
 		Name:  "Brad Pitt",
 		Age:   "60",
-		Type:  "song",
+		Type:  "actor",
 	},
 	{
 		ID:    "2",
-		Movie: "ts-fearless",
+		Movie: "Matrix",
 		Name:  "Keanu Reeves",
 		Age:   "54",
-		Type:  "song",
+		Type:  "actor",
 	},
 }
-
-/*curl -g 'http://localhost:12345/graphql?query={actors(movie:"ts-fearless"){name,age}}'
- */
