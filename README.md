@@ -62,7 +62,20 @@ Examples of Kubernetes Operators, that use [Go client](https://github.com/kubern
 
 Each operator is divide in the **Operator_test** that run the test and the **Controller** with the extended methods that interact with K8s API
 
-
 * **[Namespace operator](features/src/politrons/tools/k8/namespace)**
 * **[Pod operator](features/src/politrons/tools/k8/pod)**
 * **[Role Binding operator](features/src/politrons/tools/k8/role)**
+
+### GraphQL
+![My image](img/graphql.png)    
+
+Example of IMDb service implemented using [GraphQL](https://graphql.org/learn/) 
+
+* **[Server](features/src/politrons/tools/graphql/Imdb_test.go)**
+
+You can run the test scenario and then make some queries like 
+
+```
+curl -g 'http://localhost:12345/imdb?query={actors(movie:"Matrix"){name,age}}'
+curl -g 'http://localhost:12345/imdb?query={actors(movie:"Fight_club"){name,age}}'
+```
