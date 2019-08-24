@@ -148,8 +148,11 @@ var movieResolver = func(params graphql.ResolveParams) (interface{}, error) {
 /**
 Data types from GraphQL that will be used internally for the engine for all our CRUD with the service.
 We need to define as before with the [ObjectConfig],and it will be used as [Type] when we define our [Field]
+
+[Name] in a Type is mandatory for GraphQL library
 */
 var actorType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "Actor",
 	Fields: graphql.Fields{
 		"id": &graphql.Field{
 			Type: graphql.String,
@@ -169,8 +172,11 @@ var actorType = graphql.NewObject(graphql.ObjectConfig{
 /**
 Data types from GraphQL that will be used internally for the engine for all our CRUD with the service.
 We need to define as before with the [ObjectConfig],and it will be used as [Type] when we define our [Field]
+
+[Name] in a Type is mandatory for GraphQL library
 */
 var movieType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "Movie",
 	Fields: graphql.Fields{
 		"id": &graphql.Field{
 			Type: graphql.String,
@@ -248,5 +254,5 @@ var actors = []Actor{
 	},
 }
 
-/*curl -g 'http://localhost:12345/graphql?query={actors(movie:id("ts-fearless"){name,age}}'
+/*curl -g 'http://localhost:12345/graphql?query={actors(movie:"ts-fearless"){name,age}}'
  */
