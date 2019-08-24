@@ -111,17 +111,12 @@ func loadMovieField() *graphql.Field {
 
 var actorResolver = func(params graphql.ResolveParams) (interface{}, error) {
 	movie := params.Args["movie"].(string)
-	filterActors := []Actor{}
-	for i := 0; i < len(actors); i++ {
-		if actors[i].Movie == movie {
-			filterActors = append(filterActors, actors[i])
+	var filterActors []Actor
+	for _, actor := range actors {
+		if actor.Movie == movie {
+			filterActors = append(filterActors, actor)
 		}
 	}
-	/*	for _, song := range actors {
-		if song.ID == movie {
-			filterActors = append(filterActors, song)
-		}
-	}*/
 	return filterActors, nil
 }
 
