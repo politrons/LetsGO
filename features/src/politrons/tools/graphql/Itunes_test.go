@@ -2,6 +2,7 @@ package graphql
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"testing"
 
@@ -9,20 +10,40 @@ import (
 )
 
 func TestItunes(t *testing.T) {
+	http.HandleFunc("/graphql", handleQuery())
+	_ = http.ListenAndServe(":12345", nil)
+}
 
-	rootQuery := createQuery()
-
-	schema, _ := graphql.NewSchema(graphql.SchemaConfig{
-		Query: rootQuery,
-	})
-	http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
+/**
+This funcrio
+*/
+func handleQuery() func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 		result := graphql.Do(graphql.Params{
-			Schema:        schema,
+			Schema:        createSchema(),
 			RequestString: r.URL.Query().Get("query"),
 		})
-		json.NewEncoder(w).Encode(result)
+		err := json.NewEncoder(w).Encode(result)
+		if err != nil {
+			log.Println("Error Serializing result")
+			panic(err)
+		}
+	}
+}
+
+/**
+THis function use factory [graphql.NewSchema] where we pass [SchemaConfig] which basically require
+a Object Query type
+*/
+func createSchema() graphql.Schema {
+	schema, err := graphql.NewSchema(graphql.SchemaConfig{
+		Query: createQuery(),
 	})
-	http.ListenAndServe(":12345", nil)
+	if err != nil {
+		log.Println("Error creating Schema")
+		panic(err)
+	}
+	return schema
 }
 
 /**
@@ -49,19 +70,26 @@ func createQuery() *graphql.Object {
 //	 GRAPHQL FIELDS    #
 //######################
 
+/**
+A Field in graphql is through the type [Field] which is expected to be filled with:
+	Name:Name of the field
+	Type: Object type that define the attributes
+	Args:The that we expect to receive in the query
+	Resolve: Function to be invoked when the query use this field
+	Description: description of the field
+
+*/
 func loadSongsField() *graphql.Field {
 	return &graphql.Field{
+		Name: "Songs filed",
 		Type: graphql.NewList(songType),
 		Args: graphql.FieldConfigArgument{
 			"album": &graphql.ArgumentConfig{
 				Type: graphql.NewNonNull(graphql.String),
 			},
 		},
-		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-			album := params.Args["album"].(string)
-			println(album)
-			return songs, nil
-		},
+		Resolve:     songResolver,
+		Description: "Songs field to find a particular song using album",
 	}
 }
 
@@ -73,21 +101,29 @@ func loadAlbumField() *graphql.Field {
 				Type: graphql.NewNonNull(graphql.String),
 			},
 		},
-		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-			id := params.Args["id"].(string)
-			for _, album := range albums {
-				if album.ID == id {
-					return album, nil
-				}
-			}
-			return nil, nil
-		},
+		Resolve: albumResolver,
 	}
 }
 
 //######################
 //	GRAPHQL RESOLVERS  #
 //######################
+
+var songResolver = func(params graphql.ResolveParams) (interface{}, error) {
+	album := params.Args["album"].(string)
+	println(album)
+	return songs, nil
+}
+
+var albumResolver = func(params graphql.ResolveParams) (interface{}, error) {
+	id := params.Args["id"].(string)
+	for _, album := range albums {
+		if album.ID == id {
+			return album, nil
+		}
+	}
+	return nil, nil
+}
 
 //#################
 //	  GO TYPES    #
@@ -115,9 +151,9 @@ type Song struct {
 	Type     string `json:"type"`
 }
 
-//##################
-//	GRAPHQL TYPES  #
-//##################
+//#########################
+//	GRAPHQL OBJECT TYPES  #
+//#########################
 
 var songType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Song",
