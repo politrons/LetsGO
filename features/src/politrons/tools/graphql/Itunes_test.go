@@ -73,7 +73,7 @@ func createQuery() *graphql.Object {
 /**
 A Field in graphql is through the type [Field] which is expected to be filled with:
 	Name:Name of the field
-	Type: Object type that define the attributes
+	Type: Object type that define the attributes that it will used in the GraphQL engine
 	Args:The filter arg that we expect to receive in the query and we will use in [Resolve] function
 	Resolve: Function to be invoked when the query use this field [actors] and is where use the args to filter from all the data
 	Description: description of the field
@@ -93,6 +93,9 @@ func loadActorsField() *graphql.Field {
 	}
 }
 
+/**
+Same functionality than previous LoadActorField function but this one configure for Movies
+*/
 func loadMovieField() *graphql.Field {
 	return &graphql.Field{
 		Type: movieType,
@@ -109,6 +112,10 @@ func loadMovieField() *graphql.Field {
 //	GRAPHQL RESOLVERS  #
 //######################
 
+/**
+Filter function that it use the filter arguments that we receive form the query using [ResolveParams]
+we're able to get the attribute [movie] passed in the query to be used as a filter
+*/
 var actorResolver = func(params graphql.ResolveParams) (interface{}, error) {
 	movie := params.Args["movie"].(string)
 	var filterActors []Actor
@@ -120,9 +127,13 @@ var actorResolver = func(params graphql.ResolveParams) (interface{}, error) {
 	return filterActors, nil
 }
 
+/**
+Filter function that it will receive the filter argument from [ResolveParams] of the query and we will find
+if that particular filter data is in our current "database" in memory
+*/
 var movieResolver = func(params graphql.ResolveParams) (interface{}, error) {
 	id := params.Args["id"].(string)
-	for _, movie := range albums {
+	for _, movie := range movies {
 		if movie.ID == id {
 			return movie, nil
 		}
@@ -130,32 +141,15 @@ var movieResolver = func(params graphql.ResolveParams) (interface{}, error) {
 	return nil, nil
 }
 
-//#################
-//	  GO TYPES    #
-//#################
-type Movie struct {
-	ID     string `json:"id,omitempty"`
-	Artist string `json:"artist"`
-	Title  string `json:"title"`
-	Year   string `json:"year"`
-	Genre  string `json:"genre"`
-	Type   string `json:"type"`
-}
-
-type Actor struct {
-	ID       string `json:"id,omitempty"`
-	Movie    string `json:"movie"`
-	Title    string `json:"title"`
-	Duration string `json:"duration"`
-	Type     string `json:"type"`
-}
-
 //#########################
 //	GRAPHQL OBJECT TYPES  #
 //#########################
 
+/**
+Data types from GraphQL that will be used internally for the engine for all our CRUD with the service.
+We need to define as before with the [ObjectConfig],and it will be used as [Type] when we define our [Field]
+*/
 var actorType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "Actor",
 	Fields: graphql.Fields{
 		"id": &graphql.Field{
 			Type: graphql.String,
@@ -163,17 +157,20 @@ var actorType = graphql.NewObject(graphql.ObjectConfig{
 		"movie": &graphql.Field{
 			Type: graphql.String,
 		},
-		"title": &graphql.Field{
+		"name": &graphql.Field{
 			Type: graphql.String,
 		},
-		"duration": &graphql.Field{
+		"age": &graphql.Field{
 			Type: graphql.String,
 		},
 	},
 })
 
+/**
+Data types from GraphQL that will be used internally for the engine for all our CRUD with the service.
+We need to define as before with the [ObjectConfig],and it will be used as [Type] when we define our [Field]
+*/
 var movieType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "Movie",
 	Fields: graphql.Fields{
 		"id": &graphql.Field{
 			Type: graphql.String,
@@ -196,11 +193,35 @@ var movieType = graphql.NewObject(graphql.ObjectConfig{
 	},
 })
 
+//#################
+//	  GO TYPES    #
+//#################
+
+/**
+Go data types that we use to fill the data from our mocks database memory
+*/
+type Movie struct {
+	ID     string `json:"id,omitempty"`
+	Artist string `json:"artist"`
+	Title  string `json:"title"`
+	Year   string `json:"year"`
+	Genre  string `json:"genre"`
+	Type   string `json:"type"`
+}
+
+type Actor struct {
+	ID    string `json:"id,omitempty"`
+	Movie string `json:"movie"`
+	Name  string `json:"name"`
+	Age   string `json:"age"`
+	Type  string `json:"type"`
+}
+
 //##################
 //	  MOCK DATA    #
 //##################
 
-var albums = []Movie{
+var movies = []Movie{
 	{
 		ID:     "ts-fearless",
 		Artist: "1",
@@ -212,20 +233,20 @@ var albums = []Movie{
 
 var actors = []Actor{
 	{
-		ID:       "1",
-		Movie:    "Titanic",
-		Title:    "Fearless",
-		Duration: "4:01",
-		Type:     "song",
+		ID:    "1",
+		Movie: "Titanic",
+		Name:  "Brad Pitt",
+		Age:   "60",
+		Type:  "song",
 	},
 	{
-		ID:       "2",
-		Movie:    "ts-fearless",
-		Title:    "Fifteen",
-		Duration: "4:54",
-		Type:     "song",
+		ID:    "2",
+		Movie: "ts-fearless",
+		Name:  "Keanu Reeves",
+		Age:   "54",
+		Type:  "song",
 	},
 }
 
-/*curl -g 'http://localhost:12345/graphql?query={actors(movie:"ts-fearless"){title,duration}}'
+/*curl -g 'http://localhost:12345/graphql?query={actors(movie:id("ts-fearless"){name,age}}'
  */
