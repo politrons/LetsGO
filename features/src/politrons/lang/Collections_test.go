@@ -78,7 +78,6 @@ func TestMapFeatures(t *testing.T) {
 		fmt.Println("Value", v)
 	}
 	println("Lenght of map", len(myMap))
-
 	value, ok := myMap["key1"]
 	fmt.Println("The value:", value, "Present?", ok)
 	value1, ok := myMap["key2"]

@@ -79,3 +79,9 @@ You can run the test scenario and then make some queries like
 curl -g 'http://localhost:12345/imdb?query={actors(movie:"Matrix"){name,age}}'
 curl -g 'http://localhost:12345/imdb?query={actors(movie:"Fight_club"){name,age}}'
 ```
+
+### Vegeta Performance 
+![My image](img/vegeta_go.jpg)    
+
+Example of performance test using this awesome library 
+* **[Over 9000!](features/src/politrons/performance/Over9000_test.go)**
