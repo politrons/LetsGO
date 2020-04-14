@@ -89,17 +89,37 @@ value per each request which we will add into the [Metrics] type created previou
 This Metrics type it will generate all the telemetry info of all request info together.
 */
 func (requestInfo PerformanceRequestInfo) RunVegetaPerformance() vegeta.Metrics {
-	rate := vegeta.Rate{Freq: requestInfo.numberOfRequest, Per: time.Second}
-	targeter := vegeta.NewStaticTargeter(vegeta.Target{
-		Method: requestInfo.method,
-		URL:    requestInfo.url,
-	})
-	duration := time.Duration(requestInfo.duration) * time.Second
-	attacker := vegeta.NewAttacker()
+	rate := requestInfo.createRate()
+	targeter := requestInfo.createTargeter()
+	duration := requestInfo.createDuration()
+	metrics := requestInfo.runPerformanceAttack(vegeta.NewAttacker(), targeter, rate, duration)
+	return metrics
+}
+
+func (requestInfo PerformanceRequestInfo) runPerformanceAttack(
+	attacker *vegeta.Attacker,
+	targeter vegeta.Targeter,
+	rate vegeta.Rate,
+	duration time.Duration) vegeta.Metrics {
 	var metrics vegeta.Metrics
 	for res := range attacker.Attack(targeter, rate, duration, requestInfo.name) {
 		metrics.Add(res)
 	}
 	metrics.Close()
 	return metrics
+}
+
+func (requestInfo PerformanceRequestInfo) createDuration() time.Duration {
+	return time.Duration(requestInfo.duration) * time.Second
+}
+
+func (requestInfo PerformanceRequestInfo) createTargeter() vegeta.Targeter {
+	return vegeta.NewStaticTargeter(vegeta.Target{
+		Method: requestInfo.method,
+		URL:    requestInfo.url,
+	})
+}
+
+func (requestInfo PerformanceRequestInfo) createRate() vegeta.Rate {
+	return vegeta.Rate{Freq: requestInfo.numberOfRequest, Per: time.Second}
 }
