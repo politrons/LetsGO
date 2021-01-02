@@ -61,3 +61,11 @@ func TestIntFindMonad(t *testing.T) {
 		})
 	fmt.Printf("%v", total.(interface{}))
 }
+
+func TestIntUntilMonad(t *testing.T) {
+	total := Collection{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}.
+		Until(func(value interface{}) bool {
+			return value.(int) <= 5
+		})
+	fmt.Printf("%v", total.([]interface{}))
+}
