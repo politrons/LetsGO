@@ -2,7 +2,7 @@ package monads
 
 /**
 We define our [CollectionMonad] interface for this new type to allow to have
-[Filter, FoldLeft, FoldRight, Map and flatMap] operators in collections.
+[Find, Filter, FoldLeft, FoldRight, Map and flatMap] operators in collections.
 
 */
 type CollectionMonad interface {
