@@ -30,7 +30,7 @@ func TestStringFoldRightMonad(t *testing.T) {
 	println(total.(string))
 }
 
-func TestStringMapMonad(t *testing.T) {
+func TestMapMonad(t *testing.T) {
 	words := Collection{"hello", "Monads", "world", "!!!"}.
 		Map(func(value interface{}) interface{} {
 			return strings.ToUpper(value.(string))
@@ -38,10 +38,18 @@ func TestStringMapMonad(t *testing.T) {
 	fmt.Printf("%v", words.([]interface{}))
 }
 
-func TestIntFlatMapMonad(t *testing.T) {
+func TestFlatMapMonad(t *testing.T) {
 	total := Collection{1, 2, 3, 4, 5}.
 		FlatMap(func(value interface{}) []interface{} {
 			return []interface{}{value.(int) * 100}
+		})
+	fmt.Printf("%v", total.([]interface{}))
+}
+
+func TestIntFilterMonad(t *testing.T) {
+	total := Collection{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}.
+		Filter(func(value interface{}) bool {
+			return value.(int) > 5
 		})
 	fmt.Printf("%v", total.([]interface{}))
 }

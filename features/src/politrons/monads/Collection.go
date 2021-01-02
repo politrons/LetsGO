@@ -2,10 +2,16 @@ package monads
 
 /**
 We define our [CollectionMonad] interface for this new type to allow to have
-[fold, map and flatMap] operators in collections.
+[Filter, FoldLeft, FoldRight, Map and flatMap] operators in collections.
 
 */
 type CollectionMonad interface {
+	/**
+	[Filter] to iterate over of the collection, apply the predicate function
+	and return a new collection with the elements that the function return true.
+	*/
+	Filter(func(acc interface{}) bool) interface{}
+
 	/**
 	[FoldLeft] to iterate from the left to right of the collection, apply the function where
 	we accumulate the result and pass in each iteration of the collection.
@@ -33,10 +39,19 @@ type CollectionMonad interface {
 
 type Collection []interface{}
 
+func (collection Collection) Filter(function func(a interface{}) bool) interface{} {
+	var newCollection []interface{} = nil
+	for _, value := range collection {
+		if function(value) {
+			newCollection = append(newCollection, value)
+		}
+	}
+	return newCollection
+}
+
 func (collection Collection) FoldLeft(
-	zero interface{},
+	init interface{},
 	function func(next interface{}, acc interface{}) interface{}) interface{} {
-	var init = zero
 	for _, value := range collection {
 		init = function(init, value)
 	}
@@ -44,9 +59,8 @@ func (collection Collection) FoldLeft(
 }
 
 func (collection Collection) FoldRight(
-	zero interface{},
+	init interface{},
 	function func(acc interface{}, next interface{}) interface{}) interface{} {
-	var init = zero
 	for i := len(collection) - 1; i >= 0; i-- {
 		init = function(init, collection[i])
 	}
@@ -54,19 +68,19 @@ func (collection Collection) FoldRight(
 }
 
 func (collection Collection) Map(function func(b interface{}) interface{}) interface{} {
-	var transformCollection []interface{} = nil
+	var newCollection []interface{} = nil
 	for _, a := range collection {
-		transformCollection = append(transformCollection, function(a))
+		newCollection = append(newCollection, function(a))
 	}
-	return transformCollection
+	return newCollection
 }
 
 func (collection Collection) FlatMap(function func(b interface{}) []interface{}) interface{} {
-	var transformCollection []interface{} = nil
+	var newCollection []interface{} = nil
 	for _, a := range collection {
 		for _, b := range function(a) {
-			transformCollection = append(transformCollection, b)
+			newCollection = append(newCollection, b)
 		}
 	}
-	return transformCollection
+	return newCollection
 }
