@@ -1,7 +1,7 @@
 package lang
 
 import (
-	"fmt"
+	. "fmt"
 	"testing"
 )
 
@@ -68,10 +68,10 @@ func typeStruct() {
 		animal: Animal{age: Age(10), sex: Sex("male")},
 	}
 	women := Human{"Esther", Animal{35, "female"}}
-	fmt.Println(man)
-	fmt.Println(women)
+	Println(man)
+	Println(women)
 
 	var dog = Dog{name: Name("Bingo"), tail: 10, animal: Animal{8, "male"}}
-	fmt.Println(dog)
-	fmt.Println(man.name + " - " + women.name)
+	Println(dog)
+	Println(man.name + " - " + women.name)
 }
