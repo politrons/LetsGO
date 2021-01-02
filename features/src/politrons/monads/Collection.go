@@ -11,13 +11,13 @@ type CollectionMonad interface {
 	[Find] to iterate over of the collection, apply the predicate function
 	and return return the first element of the collection that the function return true.
 	*/
-	Find(func(acc interface{}) bool) interface{}
+	Find(func(a interface{}) bool) interface{}
 
 	/**
 	[Filter] to iterate over of the collection, apply the predicate function
 	and return a new collection with the elements that the function return true.
 	*/
-	Filter(func(acc interface{}) bool) interface{}
+	Filter(func(a interface{}) bool) interface{}
 
 	/**
 	[FoldLeft] to iterate from the left to right of the collection, apply the function where
@@ -35,13 +35,13 @@ type CollectionMonad interface {
 	[Map] to iterate the collection, apply the function where
 	we pass the transform value, into a new array, that we return once we finish to iterate all elements.
 	*/
-	Map(func(acc interface{}) interface{}) interface{}
+	Map(func(a interface{}) interface{}) interface{}
 
 	/**
 	[FlatMap] to iterate the collection, apply the function, which it return another collection, then we flat them
 	passing the transform value, into a new array, that we return once we finish to iterate all elements.
 	*/
-	FlatMap(func(acc interface{}) []interface{}) interface{}
+	FlatMap(func(a interface{}) []interface{}) interface{}
 }
 
 type Collection []interface{}
