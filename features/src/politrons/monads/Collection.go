@@ -23,6 +23,8 @@ type CollectionMonad interface {
 	we pass the transform value, into a new array, that we return once we finish to iterate all elements.
 	*/
 	Map(func(acc interface{}) interface{}) interface{}
+
+	FlatMap(func(acc interface{}) []interface{}) interface{}
 }
 
 type Collection []interface{}
@@ -50,6 +52,18 @@ func (collection Collection) FoldRight(
 func (collection Collection) Map(function func(b interface{}) interface{}) interface{} {
 	var transformCollection []interface{} = nil
 	for _, value := range collection {
+		transformCollection = append(transformCollection, function(value))
+	}
+	return transformCollection
+}
+
+func (collection Collection) FlatMap(function func(b interface{}) []interface{}) interface{} {
+	var transformCollection []interface{} = nil
+	for _, value := range collection {
+		/*	for _, value1 := range function(value) {
+
+			}
+		*/
 		transformCollection = append(transformCollection, function(value))
 	}
 	return transformCollection

@@ -37,3 +37,13 @@ func TestStringMapMonad(t *testing.T) {
 		})
 	fmt.Printf("%v", words.([]interface{}))
 }
+
+func TestIntFlatMapMonad(t *testing.T) {
+	total := Collection{1, 2, 3, 4, 5}.
+		FlatMap(func(value interface{}) []interface{} {
+			ints := []int{value.(int) * 100}
+			return ints.([]interface{}))
+		})
+	fmt.Printf("%v", total.([]interface{}))
+}
+
