@@ -51,20 +51,18 @@ func (collection Collection) FoldRight(
 
 func (collection Collection) Map(function func(b interface{}) interface{}) interface{} {
 	var transformCollection []interface{} = nil
-	for _, value := range collection {
-		transformCollection = append(transformCollection, function(value))
+	for _, a := range collection {
+		transformCollection = append(transformCollection, function(a))
 	}
 	return transformCollection
 }
 
 func (collection Collection) FlatMap(function func(b interface{}) []interface{}) interface{} {
 	var transformCollection []interface{} = nil
-	for _, value := range collection {
-		/*	for _, value1 := range function(value) {
-
-			}
-		*/
-		transformCollection = append(transformCollection, function(value))
+	for _, a := range collection {
+		for _, b := range function(a) {
+			transformCollection = append(transformCollection, b)
+		}
 	}
 	return transformCollection
 }
