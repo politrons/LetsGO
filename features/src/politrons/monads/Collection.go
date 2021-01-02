@@ -24,6 +24,10 @@ type CollectionMonad interface {
 	*/
 	Map(func(acc interface{}) interface{}) interface{}
 
+	/**
+	[FlatMap] to iterate the collection, apply the function, which it return another collection, then we flat them
+	passing the transform value, into a new array, that we return once we finish to iterate all elements.
+	*/
 	FlatMap(func(acc interface{}) []interface{}) interface{}
 }
 
