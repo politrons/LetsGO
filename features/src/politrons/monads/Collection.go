@@ -6,6 +6,13 @@ We define our [CollectionMonad] interface for this new type to allow to have
 
 */
 type CollectionMonad interface {
+
+	/**
+	[Find] to iterate over of the collection, apply the predicate function
+	and return return the first element of the collection that the function return true.
+	*/
+	Find(func(acc interface{}) bool) interface{}
+
 	/**
 	[Filter] to iterate over of the collection, apply the predicate function
 	and return a new collection with the elements that the function return true.
@@ -38,6 +45,17 @@ type CollectionMonad interface {
 }
 
 type Collection []interface{}
+
+func (collection Collection) Find(function func(a interface{}) bool) interface{} {
+	var element interface{} = nil
+	for _, value := range collection {
+		if function(value) {
+			element = value
+			break
+		}
+	}
+	return element
+}
 
 func (collection Collection) Filter(function func(a interface{}) bool) interface{} {
 	var newCollection []interface{} = nil
