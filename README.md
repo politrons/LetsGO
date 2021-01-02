@@ -28,6 +28,7 @@ Is this repo useful? Please ⭑Star this repository and share the love.
 * **[Try](features/src/politrons/monads/Try.go)**
 * **[Either](features/src/politrons/monads/Either.go)**
 * **[Future](features/src/politrons/monads/Future.go)**
+* **[Fold](features/src/politrons/monads/Fold.go)**
 
 ### Patterns
 ![My image](img/pattern.png)    
