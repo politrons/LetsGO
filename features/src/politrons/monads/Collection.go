@@ -1,14 +1,27 @@
 package monads
 
 /**
-We define our interface for this new type to allow have fold operators in collections.
-FoldLeft to iterate from the left to the right
+We define our [CollectionMonad] interface for this new type to allow to have
+[fold, map and flatMap] operators in collections.
+
 */
-type CollectionI interface {
+type CollectionMonad interface {
+	/**
+	[FoldLeft] to iterate from the left to right of the collection, apply the function where
+	we accumulate the result and pass in each iteration of the collection.
+	*/
 	FoldLeft(interface{}, func(acc interface{}, next interface{}) interface{}) interface{}
 
+	/**
+	[FoldRight] to iterate from the right to left of the collection, apply the function where
+	we accumulate the result and pass in each iteration of the collection.
+	*/
 	FoldRight(interface{}, func(acc interface{}, next interface{}) interface{}) interface{}
 
+	/**
+	[Map] to iterate the collection, apply the function where
+	we pass the transform value, into a new array, that we return once we finish to iterate all elements.
+	*/
 	Map(func(acc interface{}) interface{}) interface{}
 }
 
