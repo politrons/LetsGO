@@ -6,12 +6,17 @@ We define our [CollectionMonad] interface for this new type to allow to have
 
 */
 type CollectionMonad interface {
+	/**
+	[Take] to iterate over of the collection, and return a new collection with the elements
+	specify in the operator.
+	*/
+	Take(number int) []interface{}
 
 	/**
 	[Until] to iterate over of the collection, apply the predicate function
 	and return a new collection with the elements until the function return true.
 	*/
-	Until(func(a interface{}) bool) interface{}
+	Until(func(a interface{}) bool) []interface{}
 
 	/**
 	[Find] to iterate over of the collection, apply the predicate function
@@ -23,7 +28,7 @@ type CollectionMonad interface {
 	[Filter] to iterate over of the collection, apply the predicate function
 	and return a new collection with the elements that the function return true.
 	*/
-	Filter(func(a interface{}) bool) interface{}
+	Filter(func(a interface{}) bool) []interface{}
 
 	/**
 	[FoldLeft] to iterate from the left to right of the collection, apply the function where
@@ -52,7 +57,21 @@ type CollectionMonad interface {
 
 type Collection []interface{}
 
-func (collection Collection) Until(function func(a interface{}) bool) interface{} {
+func (collection Collection) Take(number int) []interface{} {
+	var count = 0
+	var newCollection []interface{} = nil
+	for _, value := range collection {
+		if number < count {
+			newCollection = append(newCollection, value)
+			count += 1
+		} else {
+			break
+		}
+	}
+	return newCollection
+}
+
+func (collection Collection) Until(function func(a interface{}) bool) []interface{} {
 	var newCollection []interface{} = nil
 	for _, value := range collection {
 		if function(value) {
@@ -75,7 +94,7 @@ func (collection Collection) Find(function func(a interface{}) bool) interface{}
 	return element
 }
 
-func (collection Collection) Filter(function func(a interface{}) bool) interface{} {
+func (collection Collection) Filter(function func(a interface{}) bool) []interface{} {
 	var newCollection []interface{} = nil
 	for _, value := range collection {
 		if function(value) {

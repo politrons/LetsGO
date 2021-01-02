@@ -51,7 +51,7 @@ func TestIntFilterMonad(t *testing.T) {
 		Filter(func(value interface{}) bool {
 			return value.(int) > 5
 		})
-	fmt.Printf("%v", total.([]interface{}))
+	fmt.Printf("%v", total)
 }
 
 func TestIntFindMonad(t *testing.T) {
@@ -67,5 +67,5 @@ func TestIntUntilMonad(t *testing.T) {
 		Until(func(value interface{}) bool {
 			return value.(int) <= 5
 		})
-	fmt.Printf("%v", total.([]interface{}))
+	fmt.Printf("%v", total)
 }
