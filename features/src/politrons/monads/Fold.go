@@ -1,55 +1,33 @@
 package monads
 
+/**
+We define our interface for this new type to allow have fold operators in collections.
+FoldLeft to iterate from the left to the right
+*/
 type Fold interface {
 	FoldLeft(interface{}, func(acc interface{}, next interface{}) interface{}) interface{}
 
 	FoldRight(interface{}, func(acc interface{}, next interface{}) interface{}) interface{}
 }
 
-type IntCollection []int
+type Collection []interface{}
 
-type StringCollection []string
-
-func (collection IntCollection) FoldLeft(
+func (collection Collection) FoldLeft(
 	zero interface{},
 	function func(next interface{}, acc interface{}) interface{}) interface{} {
-	return collection.processIntFunction(zero, function)
-}
-
-func (collection IntCollection) FoldRight(
-	zero interface{},
-	function func(acc interface{}, next interface{}) interface{}) interface{} {
-	return collection.processIntFunction(zero, function)
-}
-
-func (collection IntCollection) processIntFunction(
-	zero interface{},
-	function func(next interface{}, acc interface{}) interface{}) int {
-	var init = zero.(int)
+	var init = zero
 	for _, value := range collection {
-		init = function(init, value).(int)
+		init = function(init, value)
 	}
 	return init
 }
 
-func (collection StringCollection) FoldLeft(
-	zero interface{},
-	function func(next interface{}, acc interface{}) interface{}) interface{} {
-	return collection.processStringFunction(zero, function)
-}
-
-func (collection StringCollection) FoldRight(
+func (collection Collection) FoldRight(
 	zero interface{},
 	function func(acc interface{}, next interface{}) interface{}) interface{} {
-	return collection.processStringFunction(zero, function)
-}
-
-func (collection StringCollection) processStringFunction(
-	zero interface{},
-	function func(next interface{}, acc interface{}) interface{}) string {
-	var init = zero.(string)
-	for _, value := range collection {
-		init = function(init, value).(string)
+	var init = zero
+	for i := len(collection) - 1; i >= 0; i-- {
+		init = function(init, collection[i])
 	}
 	return init
 }
