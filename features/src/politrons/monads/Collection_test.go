@@ -69,3 +69,9 @@ func TestIntUntilMonad(t *testing.T) {
 		})
 	fmt.Printf("%v", total)
 }
+
+func TestIntTakeMonad(t *testing.T) {
+	total := Collection{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}.
+		Take(5)
+	fmt.Printf("%v", total)
+}

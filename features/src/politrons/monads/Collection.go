@@ -61,7 +61,7 @@ func (collection Collection) Take(number int) []interface{} {
 	var count = 0
 	var newCollection []interface{} = nil
 	for _, value := range collection {
-		if number < count {
+		if number > count {
 			newCollection = append(newCollection, value)
 			count += 1
 		} else {
