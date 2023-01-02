@@ -19,12 +19,12 @@ type MyCustomType struct {
 
 /*
 Interface in GO are a tuple of (value,type) the type it's as implementation of the interface,
- once we use an extend method with the same nme than the interface.
+ once we use an extend method with the same name than the interface.
 
- Just like in other languajes, one interface can have multiple implementations, and also a type
+ Just like in other languages, one interface can have multiple implementations, and also a type
  it might have also multiple interface to implement.
 
- In this example we have types [Name] and [MyCustomType] and sincxe both has an extended method implemented
+ In this example we have types [MyName] and [MyCustomType] and since both has an extended method implemented
  with the same name than the interface, both indeed implement MyFirstInterface.
 
  This design it could be somehow similar to type class of Haskell, where depending of the type it will
