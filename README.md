@@ -1,4 +1,4 @@
- Author Pablo Pérez García
+ Author Pablo Picouto García
 
 ![My image](img/gopher-main.png)    
  # Let's GO  
